@@ -1,6 +1,4 @@
----
-
-# Windows Environment Bootstrap Scripts
+# [DTRH]win10-bootstrap
 
 ## Overview
 
