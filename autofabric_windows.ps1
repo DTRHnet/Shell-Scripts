@@ -1,5 +1,8 @@
 # ::############################################################################
-# :: WINDOWS (POWERSHELL)
+# :: autofabric_windows.ps1 
+# ::
+# :: This will install ollama, deepseek-r1, fabric, golang, update PATH vars and
+# :: for the most part simplify deploying a local LLM with fabric.
 # ::
 # :: PURPOSE:
 # ::   1) --interactive -i to set paths manually
@@ -19,7 +22,8 @@
 # ::
 # :: USAGE:
 # ::   1) Open an elevated PowerShell (right-click -> Run as administrator) 
-# ::      on Windows, or a normal shell on Linux/macOS.
+# ::      on Windows. Due to compatibility issues, see autofabric_linux.ps1 for
+# ::      mac/linux.
 # ::   2) Run this script.
 # ::############################################################################
 
