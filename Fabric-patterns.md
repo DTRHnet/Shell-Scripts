@@ -338,3 +338,243 @@ echo "Incident: On Jan 1, attackers exploited an XSS vulnerability on our site, 
 
 - **Conclusion:**  
   This incident highlights the importance of robust security practices. While the response was swift, proactive measures are needed to prevent similar vulnerabilities in the future.
+
+
+---
+## **Find Hidden Message**
+
+**Summary:**  
+Uncovers the overt and hidden political messages in a piece of text. The pattern analyzes input (e.g. a speech or essay) for surface-level statements versus the underlying true, cynical intentions or propaganda. It produces sections for the OVERT MESSAGE (what is openly being said) and the HIDDEN MESSAGE (the true political or cynical subtext), along with supporting arguments and intended audience actions. This helps reveal the speaker’s real agenda behind their words.
+
+**Example Use [prompt]:**
+~~~bash
+pbpaste | fabric --pattern find_hidden_message
+~~~
+(Here, the clipboard text could be a political op-ed or speech transcript.)
+
+**Example Response:**
+
+**OVERT MESSAGE:**  
+- *“We must work together to improve our country’s future.”* (Calls for unity and progress on the surface)
+
+**HIDDEN MESSAGE:**  
+- *“Support my agenda unquestioningly.”* (Implying only the speaker’s plan is patriotic)
+
+**SUPPORTING ARGUMENTS and QUOTES:**  
+- The speaker references “**our country’s future**” to suggest patriotism, but really ties it to supporting **his policy** (“work together” meaning *follow his program*).
+
+**DESIRED AUDIENCE ACTION:**  
+- *Vote to keep the speaker’s party in power.*  
+- *Distrust opposing viewpoints as unpatriotic.*
+
+**CYNICAL ANALYSIS:**  
+Speaker **X** wants you to believe he is a *visionary patriot fighting for unity*, but he’s actually a *calculating politician aiming to secure power*.
+
+**MORE BALANCED ANALYSIS:**  
+Speaker **X** claims to push *national unity* but is also pushing *loyalty to his agenda* besides the main message.
+
+---
+## **Get Wow Per Minute**
+
+**Summary:**  
+Measures how “wow-packed” content is, on a per-minute basis. This pattern evaluates a video or transcript for the frequency of surprising, novel, insightful, valuable, or wise moments. In other words, it scores how often the content makes you go “wow” each minute. The output typically quantifies multiple “wow factors” (surprise, novelty, insight, value, wisdom) per minute and gives an overall WPM (Wows Per Minute) score.
+
+**Example Use [prompt]:**
+~~~bash
+yt "https://youtu.be/<VIDEO_ID>" | fabric --pattern get_wow_per_minute
+~~~
+(Here, yt could fetch the YouTube transcript. The command pipes it into Fabric.)
+
+**Example Response:**
+~~~json
+{
+  "Summary": "In-depth overview of cybersecurity careers with practical advice.",
+  "Surprise_per_minute": 7,
+  "Surprise_per_minute_explanation": "Frequent revelations about salary ranges and job paths throughout.",
+  "Novelty_per_minute": 8,
+  "Novelty_per_minute_explanation": "Fresh perspectives on entering cybersecurity, including unconventional paths.",
+  "Insight_per_minute": 9,
+  "Insight_per_minute_explanation": "Rich insider knowledge about industry dynamics and breaking into the field.",
+  "Value_per_minute": 9,
+  "Value_per_minute_explanation": "High practical value with actionable job search strategies and tips.",
+  "Wisdom_per_minute": 8,
+  "Wisdom_per_minute_explanation": "Deep career advice drawn from experience, valuable for career changers.",
+  "WPM_score": 8.2,
+  "WPM_score_explanation": "Content is densely packed with insights and useful information, making it highly rewarding."
+}
+~~~
+
+---
+## **Explain Code**
+
+**Summary:**  
+Takes code or technical output as input and produces a clear explanation. The pattern behaves like an expert software engineer who explains what the given code does or what a tool’s output means in plain language. It adapts based on input type: for source code, it outputs an EXPLANATION of the code’s functionality; for security scanner output, it gives SECURITY IMPLICATIONS; for configuration files, it provides a CONFIGURATION EXPLANATION. If the input contains a direct question about the code, an ANSWER section is also provided.
+
+**Example Use [prompt]:**
+~~~bash
+cat server_config.yaml | fabric -p explain_code
+~~~
+(This pipes a YAML configuration file into Fabric for explanation.)
+
+**Example Response:**
+
+**EXPLANATION:**  
+The provided YAML is a server configuration. It defines two services: **webapp** and **database**. The **webapp** service listens on port 8080 and serves content from `/var/www`. The **database** service uses MySQL on the default port 3306 with specified credentials. In summary, the configuration launches a web application connected to a MySQL database.
+
+**CONFIGURATION EXPLANATION:**  
+- **webapp.port:** `8080` – The web application will accept HTTP requests on port 8080.  
+- **webapp.document_root:** `/var/www` – Files served to clients are located in this directory.  
+- **database.type:** `mysql` – Specifies a MySQL database.  
+- **database.credentials.user:** `admin` – The database username is “admin”.  
+- **database.credentials.pass:** `s3cr3t` – The database password (for illustrative purposes).
+
+No security warnings are present other than ensuring the password remains confidential.
+
+---
+## **Rate AI Result**
+
+**Summary:**  
+Uses one AI (a “judging AI”) to evaluate the output of another AI. This pattern assigns a rating to an AI-generated result based on its usefulness, quality, and relevance. It reviews the original prompt, the AI’s answer, and possibly a reference solution to judge how well the AI performed. The output might include scores or grades on various criteria and an overall assessment, helping users gauge the reliability or quality of the AI’s answer.
+
+**Example Use [prompt]:**
+~~~bash
+(echo "Question:"; cat question.txt; echo "AI Answer:"; cat answer.txt) | fabric -p rate_ai_result
+~~~
+(Here, a question and an AI’s answer are fed into Fabric for evaluation.)
+
+**Example Response:**
+
+- **Overall Quality:** 7/10 – The answer is generally correct but misses some nuance.
+- **Usefulness:** Moderate – It addresses the question and provides examples, but lacks depth in explanation.
+- **Accuracy:** High – The information provided is factually correct.
+- **Clarity:** Medium – The answer is understandable, though a few sentences are confusing.
+- **Relevance:** High – Most of the response stays on topic.
+- **Feedback:** The AI’s response is solid overall, but could be improved by elaborating on complex points and organizing the answer more clearly. A human expert might rate it as acceptable but slightly under-explained.
+
+---
+## **Summarize**
+
+**Summary:**  
+Generates a concise summary of any content, highlighting the main points and key takeaways. The pattern acts as an expert summarizer that ingests text and produces a structured Markdown summary. By default, it outputs a one-sentence ultra-brief summary, a list of the top 10 main points, and the 5 most important takeaways. This helps readers quickly grasp the essence of the content without reading it in full.
+
+**Example Use [prompt]:**
+~~~bash
+pbpaste | fabric --pattern summarize
+~~~
+(Assuming the clipboard contains an article or report to summarize.)
+
+**Example Response:**
+
+**ONE SENTENCE SUMMARY:**  
+The article explains the recent cybersecurity breach and outlines the failures in security that led to the incident.
+
+**MAIN POINTS:**  
+1. A major data breach occurred at XYZ Corp, exposing thousands of customer records.  
+2. The breach was caused by a known vulnerability that was not patched.  
+3. Attackers gained access to sensitive data including names, emails, and encrypted passwords.  
+4. The intrusion was discovered 48 hours after it began.  
+5. An outdated incident response plan delayed containment.  
+6. Regulators have been notified and an investigation is underway.  
+7. The CEO issued a public apology and promised security improvements.  
+8. Experts criticized the company for neglecting basic security practices.  
+9. Customers are advised to reset passwords and monitor financial accounts.  
+10. The incident highlights the need for proactive security measures.
+
+**TAKEAWAYS:**  
+- **Unpatched Vulnerabilities:** Neglecting updates can lead directly to breaches.  
+- **Detection Lag:** Slow breach detection worsens impact.  
+- **Preparedness:** Up-to-date response plans are crucial for minimizing damage.  
+- **Accountability:** Companies may face reputational and regulatory consequences.  
+- **User Vigilance:** Users should take protective actions following a breach.
+
+---
+## **Summarize Git Changes**
+
+**Summary:**  
+Analyzes a Git repository’s commit history and produces a human-friendly summary of recent changes. This pattern identifies the major updates, features, and fixes introduced in the latest commits—acting like a release note or changelog generator. It helps in quickly understanding what has changed in a project without reading every commit.
+
+**Example Use [prompt]:**
+~~~bash
+git log -p -n 20 | fabric -p summarize_git_changes
+~~~
+(This pipes the last 20 commit diffs into Fabric for summarization.)
+
+**Example Response:**
+
+**Project Update Summary (Last 20 Commits):**
+
+- **Feature:** Added user profile editing page – Users can now update their profile information (name, avatar, bio) in-app.  
+- **Improvement:** Enhanced login security – Implemented rate limiting and 2FA support for the login endpoint.  
+- **Bug Fix:** Resolved crash on startup – Fixed a null pointer exception causing occasional crashes.  
+- **Refactor:** Database layer cleanup – Simplified database access code for better maintainability with no change in functionality.  
+- **Documentation:** Updated README with setup instructions – Added steps to configure the development environment and run tests.
+
+*These changes indicate that the app is becoming more user-friendly and secure, addressing previous bugs and adding new features.*
+
+---
+## **Summarize Paper**
+
+**Summary:**  
+Produces a structured summary of an academic paper, focusing on its key details and findings. This pattern extracts the title, authors, main goal, technical approach, distinctive features, experimental results, and the advantages and limitations of the work. It provides a comprehensive yet concise overview of a scholarly article without needing to read the full text.
+
+**Example Use [prompt]:**
+~~~bash
+pbpaste | fabric -p summarize_paper
+~~~
+(Here, the clipboard might contain the full text of a research paper or its PDF OCR text.)
+
+**Example Response:**
+
+**Title and Authors:**  
+“Flashlight in a Dark Room: A Grounded Theory Study on Infosec Management” – *Gerald Auger (Dakota State University)*
+
+**Main Goal:**  
+To understand how small healthcare providers manage information security and identify common challenges in their decision processes.
+
+**Technical Approach:**  
+Uses a qualitative **grounded theory** methodology. Conducted in-depth interviews with 9 small healthcare providers in SC and performed systematic coding and comparative analysis to derive themes.
+
+**Distinctive Features:**  
+- Focus on very small healthcare practices (≤10 physicians), an under-studied group in cybersecurity.  
+- Provides narrative-driven insights rather than quantitative metrics, offering context to security perceptions.
+
+**Experimental Setup & Key Results:**  
+Participants largely outsourced IT; 78% assumed vendors handled security by default. There was a **misalignment between perceived and actual security** – many felt confident yet had misconceptions (e.g., equating security solely with privacy). Consistent themes emerged across interviews.
+
+**Advantages & Limitations:**  
+*Strengths:* In-depth qualitative insight into a niche field; uncovers real-world attitudes and behaviors.  
+*Limitations:* Small sample size (9 providers) and regional focus; results may not generalize. No quantitative risk assessment was conducted.
+
+**Conclusion:**  
+The paper highlights critical gaps in cybersecurity practices among small healthcare providers, particularly overconfidence and overreliance on third-party vendors. Broader studies are needed to generalize these findings.
+
+---
+## **Write Semgrep Rule**
+
+**Summary:**  
+Generates a custom Semgrep rule (in YAML format) to detect a certain code pattern or vulnerability. The pattern acts as an expert in writing Semgrep static-analysis rules and outputs a working rule tailored to the input scenario. Given a description of a coding issue or a code snippet to match, it returns a YAML rule with the appropriate pattern, message, and severity to flag the issue, helping security engineers quickly create Semgrep rules.
+
+**Example Use [prompt]:**
+~~~bash
+pbpaste | fabric --pattern write_semgrep_rule
+~~~
+(Assuming the clipboard contains example code or a description of a coding pattern to catch.)
+
+**Example Response:**
+
+~~~yaml
+rules:
+- id: no-eval-in-js
+  languages: [javascript]
+  message: "Avoid using eval() due to security risks."
+  severity: WARNING
+  patterns:
+    - pattern: |
+        eval($VAL$)
+  metadata:
+    category: security
+    technology: javascript
+~~~
+
+**Explanation:**  
+The rule `no-eval-in-js` targets JavaScript and triggers whenever `eval(...)` is used, warning the developer of potential security risks.
