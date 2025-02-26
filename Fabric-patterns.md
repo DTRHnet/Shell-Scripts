@@ -578,3 +578,313 @@ rules:
 
 **Explanation:**  
 The rule `no-eval-in-js` targets JavaScript and triggers whenever `eval(...)` is used, warning the developer of potential security risks.
+
+---
+## **Analyze Threat Report**
+
+**Summary:**  
+The analyze_threat_report pattern digests a comprehensive cybersecurity threat report and pulls out its most valuable information. It produces a one-sentence summary of the report’s key finding, followed by a list of major trends and notable statistics mentioned in the report. In short, it automates the extraction of juicy bits – e.g. prominent attack trends, significant figures, and other critical insights – from lengthy threat intelligence documents.
+
+**Best Use Cases:**  
+Use this pattern when you have a large annual or quarterly threat intelligence report (such as Verizon DBIR or a CrowdStrike threat report) and need a quick distillation of its essence. It’s ideal for security analysts or executives who want to glean key takeaways (trends, stats, highlights) without reading the full report. This is useful for creating summaries for presentations or briefings and prioritizing which parts of the report to read in depth.
+
+**Example Use [prompt]:**  
+For example, if you have the CrowdStrike 2024 Global Threat Report saved as crowdstrike2024.txt, you could run:
+
+~~~bash
+fabric -p analyze_threat_report < crowdstrike2024.txt
+~~~
+
+The pattern will then output a structured summary of that report.
+
+**Example Response:**  
+After analyzing the CrowdStrike 2024 Global Threat Report, the output might be:
+
+- **ONE-SENTENCE-SUMMARY:**  
+  The 2024 CrowdStrike Global Threat Report highlights the accelerated pace and sophistication of cyberattacks, emphasizing the critical need for advanced, AI-driven cybersecurity measures in the face of evolving threats. [oai_citation_attribution:3‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=ONE)
+  
+- **TRENDS:**  
+  - Generative AI lowers the entry barrier for cyberattacks, enabling more sophisticated threats. [oai_citation_attribution:4‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=TRENDS%3A)  
+  - Identity-based attacks and social engineering are increasingly central to adversaries' strategies. [oai_citation_attribution:5‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=,increasingly%20central%20to%20adversaries%27%20strategies)
+  
+- **STATISTICS:**  
+  - 34 new adversaries tracked by CrowdStrike, raising the total to 232. [oai_citation_attribution:6‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=,on%20eCrime%20dedicated%20leak%20sites)  
+  - Cloud-conscious cases increased by 110% year over year (YoY). [oai_citation_attribution:7‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=,year%20over%20year%20%28YoY)
+
+**Insights on Usage:**  
+This pattern excels at quickly summarizing lengthy threat reports, saving analysts considerable time. To get the best results, feed it the full text of a well-structured threat report (including sections on trends and stats, if available) and double-check any numbers or facts in the output against the source report. Overall, analyze_threat_report is a powerful tool for turning dense threat intel into an executive-friendly summary.
+
+---
+
+## **Analyze Threat Report Trends**
+
+**Summary:**  
+The analyze_threat_report_trends pattern focuses specifically on extracting a thorough list of emerging trends and noteworthy insights from a threat report. It behaves like an insight miner by reading the report and pulling out up to dozens of interesting or surprising findings, all aggregated under a “TRENDS” section. Unlike the broader analyze_threat_report pattern, this one omits the one-liner and stats – instead, it emphasizes a deeper dive into patterns and trends, ensuring at least 20 distinct insight points are identified.
+
+**Best Use Cases:**  
+This pattern is best when you want a comprehensive list of takeaways or discussion points from a threat report, such as during an in-depth analysis session or when writing a detailed review. It’s particularly useful for researchers or security strategists who need to identify every significant trend or highlight from a report.
+
+**Example Use [prompt]:**  
+For instance, to extract trends from the CrowdStrike report, you could run:
+
+~~~bash
+fabric -p analyze_threat_report_trends < crowdstrike2024.txt
+~~~
+
+This will output a list of trend insights found in the report.
+
+**Example Response:**  
+An output might look like:
+
+- **TRENDS:**  
+  - A significant rise in supply chain attacks, exploiting trusted software for maximum impact. [oai_citation_attribution:10‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=,the%20detection%20of%20malicious%20activities)  
+  - Stealth tactics are increasingly employed to evade detection and move laterally within networks. [oai_citation_attribution:11‡danielmiessler.com](https://danielmiessler.com/blog/fabric-pattern-analyze-threat-report#:~:text=,cryptocurrency%20theft%20and%20intelligence%20collection)  
+  - The growing use of cloud-conscious techniques by adversaries to exploit cloud vulnerabilities.
+
+**Insights on Usage:**  
+Be prepared for a voluminous output – this pattern is tuned to find as many insights as possible (up to 50). It’s incredibly useful for creating exhaustive checklists of findings or for research purposes, but may generate repetitive points if the input text is short. Use it on comprehensive, data-rich reports to ensure you capture all significant trends.
+
+---
+
+## **Answer Interview Question**
+
+**Summary:**  
+The answer_interview_question pattern helps craft well-structured, articulate answers to interview questions. It takes a prompt (typically an interview question or topic) and responds as a knowledgeable candidate might, using professional language to provide a concise but impactful answer.
+
+**Best Use Cases:**  
+This pattern is perfect for job seekers preparing for interviews. If you’re unsure how to answer a commonly asked question (e.g., “What is your greatest strength?” or “Tell me about a time you faced a challenge”), you can use this pattern to generate a strong example answer. It’s also useful for practicing and refining your own responses.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+fabric -p answer_interview_question "Can you describe a situation where you had to overcome a significant obstacle at work?"
+~~~
+
+The pattern will then generate a thoughtful answer.
+
+**Example Response:**  
+An output might be:
+
+"Absolutely. In my previous role as a project coordinator, we encountered a major obstacle when our lead developer suddenly left in the middle of a critical project. **Situation:** We were weeks away from a product launch, and losing a key team member jeopardized our timeline. **Task:** I convened an emergency meeting to redistribute tasks, brought a former intern up to speed, and worked extra hours to cover the gaps. **Action:** I maintained constant communication with stakeholders through daily updates to manage expectations. **Result:** We launched on time with a quality product. This experience taught me the importance of proactive communication and adaptable leadership under pressure."
+
+**Insights on Usage:**  
+Providing additional context (such as the field or role) can tailor the answer more closely to your situation. Use the AI-generated response as a template to structure your own answer, ensuring you incorporate your personal experiences.
+
+---
+
+## **Ask Secure by Design Questions**
+
+**Summary:**  
+The ask_secure_by_design_questions pattern serves as a secure design advisor for any system or component you describe. Given an input outlining a software application, system architecture, or physical project, it generates an overview of why security is critical and produces a list of Secure by Design recommendations.
+
+**Best Use Cases:**  
+Use this pattern during the early stages of system design or architecture review to ensure you’ve covered fundamental security considerations. It’s ideal for designing web applications, IoT devices, or any system where security is a concern.
+
+**Example Use [prompt]:**  
+For example, if you’re developing a smart home door lock that can be controlled via a mobile app and Bluetooth, you might run:
+
+~~~bash
+fabric -p ask_secure_by_design_questions <<EOT
+We are developing a smart home door lock that can be controlled via a mobile app and Bluetooth.
+EOT
+~~~
+
+**Example Response:**  
+The output might be:
+
+- **OVERVIEW:**  
+  The description outlines a Bluetooth-enabled smart home door lock controlled by a mobile app, highlighting the need to secure both device communication and user authentication.
+
+- **SECURE BY DESIGN RECOMMENDATIONS:**  
+  - **Encrypted Communication:** Ensure all data transmitted between the lock and the mobile app/server is encrypted.  
+  - **Strong Authentication:** Implement robust, multi-factor authentication before granting access.  
+  - **Firmware Security:** Use signed firmware updates and secure boot processes to prevent unauthorized code execution.  
+  - **Fail-Safe Modes:** Design the lock to fail securely in the event of errors or power loss.  
+  - **Privacy by Design:** Minimize data collection and protect any stored credentials.
+
+**Insights on Usage:**  
+This pattern provides a checklist of security measures tailored to your system description. Its effectiveness depends on how detailed your input is, so be clear about the system’s functionality and context.
+
+---
+
+## **Ask Uncle Duke**
+
+**Summary:**  
+The ask_uncle_duke pattern provides answers and advice in the persona of “Uncle Duke” – an outspoken, no-nonsense character with a wealth of experience and a touch of humor. When you ask Uncle Duke a question, you get a candid, witty response with personality.
+
+**Best Use Cases:**  
+This pattern is ideal for informal or creative scenarios. Use it for life advice, overcoming writer’s block, or simply for a fun and engaging perspective. It’s not intended for strictly professional guidance but rather for colorful, conversational advice.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+fabric -p ask_uncle_duke "Uncle Duke, what’s your secret to staying motivated when projects get tough?"
+~~~
+
+**Example Response:**  
+The output might be:
+
+"Uncle Duke: Well, kid, staying motivated is like keeping a fire going in a rainstorm. You shield that fire with whatever you’ve got. For me, it meant remembering why I lit the flame in the first place. When projects get tough, I hunker down, pour myself a black coffee (or something stronger on rough days), and get back to work. The secret is: don’t wait for motivation to strike – do the work, and the satisfaction will stoke that fire. And if all else fails, imagine the look on everyone’s faces when you pull it off."
+
+**Insights on Usage:**  
+This pattern is best used in casual contexts where a light-hearted, candid response is appropriate. It delivers advice with personality, making interactions more engaging.
+
+---
+
+## **Capture Thinkers Work**
+
+**Summary:**  
+The capture_thinkers_work pattern creates a distilled profile of a given thinker, author, or philosopher by capturing the essence of their contributions. It typically includes background information, main ideas or theories, and notable works, providing a concise overview of the individual’s intellectual legacy.
+
+**Best Use Cases:**  
+This pattern is perfect for quickly learning about or reminding yourself of influential figures in academia, literature, science, or philosophy. It’s useful for creating study guides or quick reference notes.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+echo "Hayek" | fabric -p capture_thinkers_work
+~~~
+
+**Example Response:**  
+An output for “Hayek” might be:
+
+- **Background:**  
+  Friedrich August von Hayek was an Austrian-British economist and philosopher known for his defense of classical liberalism and free-market capitalism.
+
+- **Main Ideas:**  
+  Hayek emphasized the role of decentralized decision-making and the price mechanism in efficiently allocating resources, and he criticized centralized planning.
+
+- **Notable Works:**  
+  *The Road to Serfdom*, *The Constitution of Liberty*, and *Law, Legislation and Liberty*.
+
+- **Legacy:**  
+  His work laid the foundation for modern free-market economic thought and has influenced policies favoring deregulation and privatization.
+
+**Insights on Usage:**  
+The accuracy of the output depends on how well-known the figure is. For prominent thinkers, the summary is usually reliable; always verify key details when using the information for scholarly purposes.
+
+---
+
+## **Check Agreement**
+
+**Summary:**  
+The check_agreement pattern evaluates whether two pieces of content are in agreement with each other. It acts as a consistency or fact-checking tool by comparing a statement (or claim) with corresponding evidence or another statement, and then determines if they align.
+
+**Best Use Cases:**  
+This pattern is useful for fact-checking, verifying that a summary matches an original text, or comparing a user’s answer to an official answer key. It’s a great tool for educators, editors, or anyone needing to validate content consistency.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+echo -e "Claim: The software is completely secure.\nEvidence: The software was breached last week due to a vulnerability." | fabric -p check_agreement
+~~~
+
+**Example Response:**  
+An output might be:
+
+"The evidence directly contradicts the claim. The claim states the software is 'completely secure,' but the evidence describes a breach, indicating the software was not fully secure. Therefore, they do not agree."
+
+**Insights on Usage:**  
+Ensure you provide the inputs in a clear, parseable format (for instance, by labeling with “Claim:” and “Evidence:”). The pattern checks logical agreement rather than factual truth, so it will indicate agreement even if both statements are false but consistent.
+
+---
+
+## **Clean Text**
+
+**Summary:**  
+The clean_text pattern is a utility that sanitizes and formats text by removing noise, unwanted characters, or markup. It strips away HTML tags, excessive whitespace, special characters, and other clutter, leaving you with cleaner, plain text.
+
+**Best Use Cases:**  
+Use clean_text whenever you have messy input, such as text copied from PDFs or websites that contains broken line breaks, HTML entities, or other artifacts. It’s often used as a preparatory step before further analysis or summarization.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+fabric -p clean_text "Hello!!! *** This   is a <b>TEST</b> --- of the text-cleaning pattern..."
+~~~
+
+**Example Response:**  
+The output might be:
+
+Hello! This is a TEST of the text-cleaning pattern...
+
+**Insights on Usage:**  
+While effective at removing clutter, the pattern may be aggressive and remove desired formatting. It’s best used on prose or free-form text, and can be paired with other patterns to improve overall processing.
+
+---
+
+## **Coding Master**
+
+**Summary:**  
+The coding_master pattern acts as an expert software developer assistant. It understands coding-related queries and produces helpful programming output—whether that’s writing code, explaining code, or improving code. It adapts based on your prompt to provide code snippets, explanations, or debugging help.
+
+**Best Use Cases:**  
+This pattern is incredibly useful for developers and learners. Use it when you need quick code generation, debugging help, or a clear explanation of code or programming concepts. It’s ideal for writing functions, explaining algorithms, or refining code snippets.
+
+**Example Use [prompt]:**  
+For example:
+
+~~~bash
+fabric -p coding_master "Write a Python function to check if a number is prime."
+~~~
+
+**Example Response:**  
+The output might be:
+
+~~~python
+def is_prime(n):
+    """Check if a number is prime."""
+    if n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+~~~
+
+Explanation: This function first rules out numbers less than 2 (which are not prime). It then iterates from 2 up to the square root of n. If it finds a divisor, it returns False; otherwise, it returns True.
+
+**Insights on Usage:**  
+Always test the generated code and refine your prompt with specific requirements if necessary. The pattern is versatile and can generate code or provide explanations depending on your input.
+
+---
+
+## **Compare and Contrast**
+
+**Summary:**  
+The compare_and_contrast pattern examines two subjects or texts and discusses their similarities and differences. It produces an organized analysis that highlights commonalities as well as divergences, typically separating the points into clearly defined sections.
+
+**Best Use Cases:**  
+This pattern is ideal for analytical writing and study, such as comparing theories, historical events, products, or any two subjects. It’s useful for generating comparison tables or structured paragraphs for articles, research, or decision-making.
+
+**Example Use [prompt]:**  
+For example, to compare two inventors:
+
+~~~bash
+fabric -p compare_and_contrast "Tesla vs Edison"
+~~~
+
+Alternatively, you could use:
+
+~~~bash
+echo -e "Sharks\nDolphins" | fabric -p compare_and_contrast
+~~~
+
+**Example Response:**  
+For the “Tesla vs Edison” prompt, the output might be:
+
+**Similarities:**  
+- Both Nikola Tesla and Thomas Edison were visionary inventors who significantly influenced electrical technology.  
+- Each held numerous patents and contributed to the spread of electricity.
+
+**Differences:**  
+- Edison was a prolific inventor-businessman known for practical inventions like the light bulb and direct current systems, while Tesla was more theoretical, pioneering alternating current technology.  
+- Edison achieved considerable financial success and commercialized his inventions, whereas Tesla’s ideas were often ahead of their time and less commercially exploited.
+
+**Insights on Usage:**  
+For a coherent comparison, ensure the two subjects are clearly identified. The pattern structures the response by separating similarities and differences, which is especially useful when comparing items with clear, established points of comparison.
