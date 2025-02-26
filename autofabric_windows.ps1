@@ -1,9 +1,35 @@
+# ::############################################################################
+# :: WINDOWS (POWERSHELL)
+# ::
+# :: PURPOSE:
+# ::   1) --interactive -i to set paths manually
+# ::   2) Install dependencies (git, curl, go, ollama) as needed.
+# ::   3) Clone the Fabric repository into a folder named "fabric".
+# ::   4) Run "install_fabric.bat" (in the cloned repository) as Admin
+# ::      to handle the actual Fabric installation steps.
+# ::   5) Configure Ollama model, test it, set up Fabric patterns, and test piping.
+# ::
+# :: IMPORTANT WINDOWS NOTES:
+# ::   - Unable to execute script from powershell? Run this in the shell
+# ::     Set-ExecutionPolicy Bypass -Scope Process -Force
+# ::   - The "install_fabric.bat" script must be run as Administrator. We will
+# ::     check for administrative privileges in PowerShell before proceeding.
+# ::   - We add "C:\Users\<username>\go\bin" (i.e., $env:USERPROFILE\go\bin)
+# ::     to PATH for the current session. No new shells are opened.
+# ::
+# :: USAGE:
+# ::   1) Open an elevated PowerShell (right-click -> Run as administrator) 
+# ::      on Windows, or a normal shell on Linux/macOS.
+# ::   2) Run this script.
+# ::############################################################################
+
+
 param(
     [switch]$Interactive
 )
 
 #region Log & Stop
-# Log errors verbosely to errors.log with timestamp.
+# Log errors verbosely to errors.log with a timestamp.
 function Log-Err {
     param(
         [Parameter(Mandatory=$true)]
@@ -14,7 +40,7 @@ function Log-Err {
     Add-Content -Path "errors.log" -Value $line
 }
 
-# Stop the script (without closing the shell).
+# Halt script execution (without closing the shell).
 function Stop-Script {
     param(
         [string]$Msg = "Critical error encountered. Script halted."
@@ -26,62 +52,37 @@ function Stop-Script {
 }
 #endregion
 
-#region Broadcast Env Changes
-# This function sends a WM_SETTINGCHANGE message to inform other processes
-# of environment variable updates. This makes PATH changes more likely to be
-# recognized by newly started programs.
-function BC-Env {
-    Add-Type -TypeDefinition @"
-using System;
-using System.Runtime.InteropServices;
-
-public class EnvRefresher {
-    [DllImport("user32.dll", CharSet=CharSet.Auto, SetLastError=true)]
-    public static extern IntPtr SendMessageTimeout(IntPtr hWnd, int Msg,
-        IntPtr wParam, IntPtr lParam, int flags, int timeout, out IntPtr result);
-
-    public const int HWND_BROADCAST = 0xffff;
-    public const int WM_SETTINGCHANGE = 0x1A;
-    public static void Refresh() {
-        IntPtr res;
-        SendMessageTimeout((IntPtr)HWND_BROADCAST, WM_SETTINGCHANGE,
-            IntPtr.Zero, IntPtr.Zero, 2, 500, out res);
-    }
-}
-"@
-    [EnvRefresher]::Refresh()
-    Write-Host "Broadcasted WM_SETTINGCHANGE message to refresh environment variables." -ForegroundColor Green
-}
-#endregion
-
 #region Constants
-# Define apps to check (git is required for fabric).
+# Define apps to check. (git is required for fabric)
 $APP_DEPS = @("git", "go", "fabric", "ollama")
 
-# Define installer URLs.
-# A URL ending with .git or containing github.com is treated as a repo link.
+# Installer URLs (repo links end with .git or contain github.com).
 $APP_INSTALLERS = @{
     "git"    = "https://github.com/git-for-windows/git/releases/download/v2.41.0.windows.1/Git-2.41.0-64-bit.exe"
     "go"     = "https://golang.org/dl/go1.21.0.windows-amd64.msi"
     "fabric" = "https://github.com/fabric/fabric.git"
-    "ollama" = "https://ollama.ai/win/ollama_installer.exe"
+    "ollama" = "https://ollama.com/download/OllamaSetup.exe"
 }
 
-# Default install paths.
-$GO_BASE     = "C:\Go"                              # Where Go is installed.
-$FABRIC_BASE = "$env:USERPROFILE\fabric"            # Where Fabric repo is cloned.
-$TEMP_DIR    = "C:\Temp"                            # Where EXE/MSI installers are downloaded.
-$GO_BIN      = "$env:USERPROFILE\go\bin"            # Go binary folder.
+# Default install locations.
+$GO_BASE     = "C:\Go"                   # Where Go is installed.
+$FABRIC_BASE = "$env:USERPROFILE\fabric" # Where the Fabric repo is cloned.
+$TEMP_DIR    = "C:\Temp"                 # Where EXE/MSI installers are downloaded.
+$GO_BIN      = "$env:USERPROFILE\go\bin" # Where Go binaries reside.
+$LLM         = "deepseek-r1"            # Example LLM name.
 #endregion
 
 #region Interactive Setup
 if ($Interactive) {
     $inp = Read-Host "Enter GO base path (default: $GO_BASE) - (location where Go is installed)"
     if (-not [string]::IsNullOrWhiteSpace($inp)) { $GO_BASE = $inp }
+
     $inp = Read-Host "Enter FABRIC base path (default: $FABRIC_BASE) - (location where Fabric repo is cloned)"
     if (-not [string]::IsNullOrWhiteSpace($inp)) { $FABRIC_BASE = $inp }
+
     $inp = Read-Host "Enter TEMP dir (default: $TEMP_DIR) - (location for downloading installers)"
     if (-not [string]::IsNullOrWhiteSpace($inp)) { $TEMP_DIR = $inp }
+
     $inp = Read-Host "Enter GO BIN path (default: $GO_BIN) - (location where Go binaries reside)"
     if (-not [string]::IsNullOrWhiteSpace($inp)) { $GO_BIN = $inp }
 }
@@ -142,7 +143,7 @@ foreach ($app in $APP_DEPS) {
 }
 #endregion
 
-#region Update PATH Func
+#region Update PATH Function
 function Upd-Path {
     param(
         [Parameter(Mandatory=$true)]
@@ -154,7 +155,7 @@ function Upd-Path {
     if ($Scope -eq "Machine") {
         $cur = [Environment]::GetEnvironmentVariable("PATH", "Machine")
         if (-not ($cur -like "*$Dir*")) {
-            $new = $cur + ";" + $Dir
+            $new = "$cur;$Dir"
             [Environment]::SetEnvironmentVariable("PATH", $new, "Machine")
             Write-Host "Updated Machine PATH with $Dir" -ForegroundColor Green
             Log-Err "Updated Machine PATH with $Dir"
@@ -166,7 +167,7 @@ function Upd-Path {
     else {
         $cur = [Environment]::GetEnvironmentVariable("PATH", "User")
         if (-not ($cur -like "*$Dir*")) {
-            $new = $cur + ";" + $Dir
+            $new = "$cur;$Dir"
             [Environment]::SetEnvironmentVariable("PATH", $new, "User")
             Write-Host "Updated User PATH with $Dir" -ForegroundColor Green
             Log-Err "Updated User PATH with $Dir"
@@ -178,7 +179,7 @@ function Upd-Path {
 }
 #endregion
 
-#region Install Func: Inst-Prog
+#region Install Function
 function Inst-Prog {
     param(
         [Parameter(Mandatory=$true)]
@@ -188,7 +189,7 @@ function Inst-Prog {
     )
     Write-Host "Installing [$App]..." -ForegroundColor Cyan
 
-    # If URL is a repo link.
+    # If URL is a repo link (Git-based).
     if ($Url -match "\.git$" -or $Url -match "github\.com") {
         if ($App -eq "fabric") {
             $targ = $FABRIC_BASE
@@ -201,10 +202,10 @@ function Inst-Prog {
         }
         Write-Host "Repo link detected for [$App]. Cloning to: $targ" -ForegroundColor Cyan
         if (Test-Path $targ) {
-            $its = Get-ChildItem $targ -Force | Where-Object { $_.Name -notin @('.', '..') }
-            if ($its.Count -gt 0) {
+            $files = Get-ChildItem $targ -Force | Where-Object { $_.Name -notin @('.', '..') }
+            if ($files.Count -gt 0) {
                 Write-Warning "Target [$targ] exists and is not empty. Skipping clone."
-                Log-Err "Clone skipped for [$App] as target [$targ] is not empty."
+                Log-Err "Clone skipped for [$App], target [$targ] not empty."
                 return
             }
         }
@@ -217,47 +218,47 @@ function Inst-Prog {
             Write-Error "Clone failed for [$App]: $_"
             return
         }
-        # For fabric, run install_fabric.bat in the cloned directory.
+        # Post-clone steps for Fabric.
         if ($App -eq "fabric") {
             try {
                 Push-Location $targ
-                Write-Host "Running install_fabric.bat for [$App]..." -ForegroundColor Cyan
-                cmd /c "install_fabric.bat"
+                Write-Host "Running windows_install.bat for Fabric..." -ForegroundColor Cyan
+                cmd /c "windows_install.bat"
                 Pop-Location
-                Write-Host "install_fabric.bat completed for [$App]." -ForegroundColor Green
+                Write-Host "windows_install.bat completed for Fabric." -ForegroundColor Green
             }
             catch {
-                Log-Err "install_fabric.bat failed for [$App]: $_"
-                Write-Error "install_fabric.bat failed for [$App]: $_"
+                Log-Err "windows_install.bat failed for Fabric: $_"
+                Write-Error "windows_install.bat failed for Fabric: $_"
             }
         }
     }
     else {
-        # For installer files, download to $TEMP_DIR.
+        # If an installer (EXE or MSI).
         if (-not (Test-Path $TEMP_DIR)) {
             try {
                 New-Item -ItemType Directory -Path $TEMP_DIR -Force | Out-Null
                 Write-Host "Created TEMP dir: $TEMP_DIR" -ForegroundColor Green
             }
             catch {
-                Log-Err "Failed to create TEMP dir: $TEMP_DIR. Skipping [$App]."
-                Write-Error "Failed to create TEMP dir: $TEMP_DIR. Skipping [$App]."
+                Log-Err "Failed to create TEMP dir: $TEMP_DIR."
+                Write-Error "Failed to create TEMP dir: $TEMP_DIR."
                 return
             }
         }
         $ext = ([System.IO.Path]::GetExtension($Url)).ToLower()
         $name = "$App`_installer$ext"
-        $path = Join-Path $TEMP_DIR $name
+        $installerPath = Join-Path $TEMP_DIR $name
 
         try {
             Write-Host "Downloading installer for [$App] from: $Url" -ForegroundColor Cyan
-            $curlCmd = "curl.exe -L -o `"$path`" `"$Url`""
+            $curlCmd = "curl.exe -L -o `"$installerPath`" `"$Url`""
             Invoke-Expression $curlCmd
-            if (Test-Path $path) {
-                Write-Host "Downloaded installer for [$App] to: $path" -ForegroundColor Green
+            if (Test-Path $installerPath) {
+                Write-Host "Downloaded installer for [$App] to: $installerPath" -ForegroundColor Green
             }
             else {
-                Log-Err "Download failed for [$App]. Installer file not found at: $path"
+                Log-Err "Download failed for [$App]. File not found at: $installerPath"
                 Write-Error "Download failed for [$App]."
                 return
             }
@@ -270,9 +271,9 @@ function Inst-Prog {
 
         switch ($ext) {
             ".msi" {
-                Write-Host "MSI installer detected for [$App]. Running msiexec." -ForegroundColor Cyan
+                Write-Host "MSI installer detected for [$App]. Running msiexec..." -ForegroundColor Cyan
                 try {
-                    Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$path`" /qn" -Wait -ErrorAction Stop
+                    Start-Process msiexec.exe -ArgumentList "/i `"$installerPath`" /qn" -Wait -ErrorAction Stop
                     Write-Host "MSI install complete for [$App]." -ForegroundColor Green
                 }
                 catch {
@@ -281,9 +282,9 @@ function Inst-Prog {
                 }
             }
             ".exe" {
-                Write-Host "EXE installer detected for [$App]. Running installer." -ForegroundColor Cyan
+                Write-Host "EXE installer detected for [$App]. Running installer..." -ForegroundColor Cyan
                 try {
-                    Start-Process -FilePath $path -Wait -ErrorAction Stop
+                    Start-Process $installerPath -Wait -ErrorAction Stop
                     Write-Host "EXE install complete for [$App]." -ForegroundColor Green
                 }
                 catch {
@@ -292,22 +293,22 @@ function Inst-Prog {
                 }
             }
             default {
-                Write-Warning "Unknown file type [$ext] for [$App]."
+                Write-Warning "Unknown installer file type [$ext] for [$App]."
                 Log-Err "Unknown file type [$ext] for [$App]."
             }
         }
     }
-    
-    # For ollama, prompt the user to confirm installation completion.
+
+    # For Ollama, confirm installation completion.
     if ($App -eq "ollama") {
         do {
-            $ans = Read-Host "Have you finished installing Ollama? Y/n"
-        } while ($ans -notin @("Y","y"))
+            $ans = Read-Host "Have you finished installing Ollama completely? (Y/n)"
+        } while ($ans.ToUpper() -ne "Y")
     }
 }
 #endregion
 
-#region Process Install List
+#region Process Installs
 foreach ($app in $instList) {
     if ($APP_INSTALLERS.ContainsKey($app)) {
         Inst-Prog -App $app -Url $APP_INSTALLERS[$app]
@@ -319,35 +320,116 @@ foreach ($app in $instList) {
 }
 #endregion
 
-#region Update PATH for Install Bases
-# Update System/User PATH for go, fabric, and go\bin.
-Upd-Path -Dir $GO_BASE     -Scope "Machine"
-Upd-Path -Dir $GO_BASE     -Scope "User"
+#region Update PATH
+Upd-Path -Dir $GO_BASE -Scope "Machine"
+Upd-Path -Dir $GO_BASE -Scope "User"
 Upd-Path -Dir $FABRIC_BASE -Scope "Machine"
 Upd-Path -Dir $FABRIC_BASE -Scope "User"
-Upd-Path -Dir $GO_BIN      -Scope "Machine"
-Upd-Path -Dir $GO_BIN      -Scope "User"
-
-# Broadcast WM_SETTINGCHANGE so newly launched processes see updated environment.
-BC-Env
+Upd-Path -Dir $GO_BIN -Scope "Machine"
+Upd-Path -Dir $GO_BIN -Scope "User"
 #endregion
 
-#region Summary Report & Refresh
-Write-Host "============================================" -ForegroundColor Cyan
+#region Set LlmConfig
+function Set-LlmConfig {
+    Write-Host "Running LLM configuration..." -ForegroundColor Cyan
+    try {
+        Write-Host "Pulling LLM [$LLM] via ollama..."
+        Start-Process -FilePath "ollama" -ArgumentList "pull $LLM" -Wait -NoNewWindow -ErrorAction Stop
+        Write-Host "LLM pull successful." -ForegroundColor Green
+    }
+    catch {
+        Log-Err "LLM pull failed: $_"
+        Write-Error "LLM pull failed: $_"
+    }
+    Write-Host "Now running 'fabric --setup'. When prompted, manually enter all required sections." -ForegroundColor Yellow
+    try {
+        Start-Process -FilePath "fabric" -ArgumentList "--setup" -Wait -NoNewWindow -ErrorAction Stop
+        Write-Host "Fabric setup complete." -ForegroundColor Green
+    }
+    catch {
+        Log-Err "Fabric setup failed: $_"
+        Write-Error "Fabric setup failed: $_"
+    }
+}
+
+
+# ::============================================================================
+# :: FUNCTION: TEST-OLLAMAMODEL
+# ::============================================================================
+# :: Performs a rudimentary check that Ollama model can be invoked. This is
+# :: simplistic; real usage might prefer a direct invocation (Invoke-Expression).
+# ::============================================================================
+function Test-OllamaModel {
+    Write-Output "Testing Ollama model load with ollama run $_LLM_..."
+    try {
+        $result = "ollama run $_LLM_"
+
+        if ($result) {
+            Write-Output "Ollama model $_LLM_ loaded successfully!"
+        }
+        else {
+            Write-Output "Failed to load Ollama model $_LLM_!"
+            Log-Error "Failed to load Ollama model $_LLM_."
+            exit 1
+        }
+    }
+    catch {
+        Log-Error "Ollama model load failed: $_"
+    }
+}
+
+# ::============================================================================
+# :: FUNCTION: TEST-FABRICPIPING
+# ::============================================================================
+# :: Sends a test prompt ("What is the capital of France?") to fabric ask 
+# :: and checks if "Paris" is in the output. 
+# ::============================================================================
+function Test-FabricPiping {
+    Write-Output "Testing Fabric piping..."
+    try {
+        $testOutput = "What is the capital of France?"
+        $pipeResult = $testOutput | fabric ask
+
+        if ($pipeResult -like "*Paris*") {
+            Write-Output "Fabric successfully processed the piped data."
+        }
+        else {
+            Write-Output "Fabric did not process the data as expected."
+            Log-Error "Fabric piping test failed: output did not contain 'Paris'."
+            exit 1
+        }
+    }
+    catch {
+        Log-Error "Fabric piping test failed: $_"
+        Write-Output "Fabric piping test failed."
+        exit 1
+    }
+}
+
+# Execute LLM configuration (requires Ollama installed).
+Set-LlmConfig
+
+# Test fabric via simple CLI pipe
+Test-FabricPiping
+#endregion
+
+#region Summary Report
+Write-Host "`n============================================" -ForegroundColor Cyan
 Write-Host "          INSTALLATION SUMMARY              " -ForegroundColor Cyan
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host "Git installed at: $($gitCmd.Source)" -ForegroundColor Green
 Write-Host "Go installed at: $GO_BASE" -ForegroundColor Green
-Write-Host "Go BIN at: $GO_BIN" -ForegroundColor Green
+Write-Host "Go bin directory: $GO_BIN" -ForegroundColor Green
 Write-Host "Fabric installed at: $FABRIC_BASE" -ForegroundColor Green
-Write-Host "TEMP directory used: $TEMP_DIR" -ForegroundColor Green
-Write-Host "Paths have been updated and WM_SETTINGCHANGE broadcasted." -ForegroundColor Yellow
-Write-Host "If a new terminal does not see these changes, please log out or re-launch" -ForegroundColor Yellow
-Write-Host "from Windows Explorer (or restart your terminal application)." -ForegroundColor Yellow
-Write-Host "============================================" -ForegroundColor Cyan
-
-# Refresh current shell's PATH so this session also sees the updated PATH right away.
-$env:PATH = [Environment]::GetEnvironmentVariable("PATH","Machine") + ";" + [Environment]::GetEnvironmentVariable("PATH","User")
+Write-Host "LLM configured as: $LLM" -ForegroundColor Green
+Write-Host "Temp installer directory: $TEMP_DIR" -ForegroundColor Green
+Write-Host "Ensure PATH includes these directories (the script has persisted them)." -ForegroundColor Yellow
+Write-Host "============================================`n" -ForegroundColor Cyan
 #endregion
 
+#region Refresh PATH & End
+# Refresh the current shell PATH with updated values from Machine + User.
+$env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")
+
 Read-Host "Press Enter to exit"
+#endregion
