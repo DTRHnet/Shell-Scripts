@@ -888,3 +888,428 @@ For the “Tesla vs Edison” prompt, the output might be:
 
 **Insights on Usage:**  
 For a coherent comparison, ensure the two subjects are clearly identified. The pattern structures the response by separating similarities and differences, which is especially useful when comparing items with clear, established points of comparison.
+
+--- 
+## **Analyze Interviewer Techniques**
+
+**Summary:**  
+This pattern evaluates the questions asked by an interviewer in a conversation or podcast to pinpoint what makes their interviewing technique effective. It acts as an ultra-intelligent analysis tool that “extracts the je ne sais quoi” of great interviewers – in other words, it identifies the special qualities in the interviewer’s questions that set them apart. It scrutinizes every question, analyzing patterns and styles, and then produces a breakdown of the techniques used and a concise summary of why those techniques make the interviewer exceptional.
+
+**Best Use Cases:**  
+- When reviewing an interview transcript to learn why a particular interviewer (e.g., a famous journalist or podcast host) is so effective.  
+- For aspiring interviewers or podcasters seeking feedback on their own questioning style to improve their technique.  
+- Analyzing Q&A sessions or job interviews to extract what the interviewer did to elicit insightful responses.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ cat interviewer_transcript.txt | fabric --pattern analyze_interviewer_techniques
+~~~
+
+**Example Response:**  
+**INTERVIEWER QUESTIONS AND TECHNIQUES:**  
+- Q: “How did you overcome your biggest challenge?” – Uses a reflective prompt to encourage a deep, personal story, building empathy and trust.  
+- Q: “Why do you think that strategy paid off?” – A probing follow-up that pushes the interviewee to analyze their own reasoning, revealing deeper insights.
+
+**TECHNIQUE ANALYSIS:**  
+- **Empathetic Storytelling:** The interviewer asks open-ended questions that invite storytelling, making the conversation intimate and genuine.  
+- **Insightful Follow-ups:** They consistently ask “why” to prompt further analysis, uncovering underlying reasons.
+
+**INTERVIEWER TECHNIQUE SUMMARY:**  
+This interviewer blends warmth with curiosity, making the guest comfortable enough to share personal stories while consistently probing deeper. The result is an interview full of genuine, insightful answers.
+
+**Insights on Usage:**  
+- Provide a full transcript or a complete list of questions for a thorough analysis.  
+- Clearly label the roles (interviewer vs. interviewee) to avoid misidentification.  
+- Use the output as coaching tips to refine your questioning style.
+
+--- 
+## **Analyze Logs**
+
+**Summary:**  
+Analyze_logs is designed for IT operations and DevOps, making sense of raw system or application logs. It acts as a seasoned Site Reliability Engineer by reviewing log files to identify unusual patterns, errors, or anomalies, and then summarizing system reliability and performance issues along with suggestions for improvements.
+
+**Best Use Cases:**  
+- Diagnosing server issues after an incident by analyzing logs from a specific timeframe.  
+- Conducting regular log reviews for maintenance to catch early warning signs such as repeated warnings or performance degradation.  
+- Checking the health of a new deployment to spot error patterns or performance issues.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ fabric --pattern analyze_logs < /var/log/app/server.log
+~~~
+
+**Example Response:**  
+**PATTERNS & ANOMALIES:**  
+- **Spike in Errors:** Surge of “OutOfMemoryError” entries between 02:00–02:30 UTC, suggesting a memory leak during a nightly batch job.  
+- **Frequent Warnings:** Repeated disk space warnings (“Disk at 90% capacity”) each day around 03:00, indicating potential issues with the backup process.
+
+**SYSTEM RELIABILITY INSIGHTS:**  
+- The server maintained uptime despite errors, though response times increased during the error spike.  
+- Recurring disk space warnings signal a risk of running out of storage.
+
+**RECOMMENDATIONS:**  
+- **Fix Memory Leak:** Investigate and patch the suspected module causing the leak.  
+- **Increase Disk Capacity/Cleanup:** Expand capacity or adjust backup processes to prevent critical levels.  
+- **Monitoring:** Set up alerts for high memory and disk usage.
+
+**Insights on Usage:**  
+- Input logs should cover the relevant timeframe due to token limits.  
+- Use this analysis as a first-pass diagnostic before deeper investigation.  
+- Remove sensitive information from logs before analysis.
+
+--- 
+## **Analyze Malware**
+
+**Summary:**  
+Analyze_malware provides a cybersecurity-focused analysis of a malware sample, explaining its functionalities, identifying likely attack vectors, and suggesting potential mitigation strategies. It functions like a malware analyst who breaks down what the malware does, how it spreads, and how to defend against it.
+
+**Best Use Cases:**  
+- Reverse-engineering assistance for malware by analyzing decompiled code or observed behavior.  
+- Generating incident response reports that summarize the malware’s impact and mitigation steps.  
+- Enhancing security awareness by explaining malware operations in plain language.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ cat suspected_malware.txt | fabric --pattern analyze_malware
+~~~
+
+**Example Response:**  
+**MALWARE CAPABILITIES:**  
+- Records keystrokes and steals passwords via an installed keylogger.  
+- Opens a backdoor on port 4444 for remote command execution.  
+- Self-propagates through network shares.
+
+**ATTACK VECTORS & BEHAVIOR:**  
+- Likely initiated via a malicious email attachment; disguises itself as a legitimate process.  
+- Modifies registry keys for persistence and schedules hidden tasks for data exfiltration.  
+- Communicates with a command-and-control server (example.evilserver.com).
+
+**POTENTIAL MITIGATIONS:**  
+- **Isolation:** Immediately isolate affected machines.  
+- **Removal:** Quarantine malicious files and remove altered registry keys; run an updated anti-malware scan.  
+- **Patching & User Education:** Patch vulnerabilities and train users on phishing email risks.  
+- **Network Defense:** Block outbound traffic to known malicious domains and implement network segmentation.
+
+**Insights on Usage:**  
+- Provide detailed logs or decompiled output for a precise analysis.  
+- Do not execute actual malware; use safe analysis outputs instead.  
+- Validate suggested mitigation steps with official security protocols.
+
+--- 
+## **Analyze Military Strategy**
+
+**Summary:**  
+This pattern analyzes a military strategy or battle plan by breaking down its objectives, tactics, and overall effectiveness. It highlights strengths and weaknesses, providing a structured critique to assess why the strategy might succeed or fail.
+
+**Best Use Cases:**  
+- Historical battle analysis, such as examining Napoleon’s tactics at Waterloo.  
+- Fictional scenario planning for military science fiction or wargames.  
+- Educational use in military strategy courses for comparative analysis.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ fabric --pattern analyze_military_strategy -i battle_plan.txt
+~~~
+
+**Example Response:**  
+**OBJECTIVES:**  
+- Primary: Encircle the enemy’s 5th Division in the valley to cut off supply lines.  
+- Secondary: Secure the high ground (Hill 204) for artillery placement.
+
+**STRATEGY & TACTICS:**  
+- Pincer movement: Two battalions flank from the north and south at dawn while a frontal feint holds the enemy in place; reserves are poised to exploit breakthroughs.  
+- A cavalry unit is assigned to conduct a raid behind enemy lines to disrupt logistics.
+
+**STRENGTHS (Pros):**  
+- **Surprise & Shock:** Multi-directional offensive maximizes shock and can quickly collapse enemy defenses.  
+- **Terrain Advantage:** Securing Hill 204 provides a commanding view and effective artillery support.  
+- **Reserves:** Well-positioned reserves offer flexibility to reinforce breakthroughs.
+
+**WEAKNESSES (Cons):**  
+- Extended supply lines for flanking units risk resource depletion.  
+- High coordination demands may lead to mis-timed attacks.  
+- The center remains thinly defended, exposing vulnerability to counterattacks.
+
+**LIKELY OUTCOME ASSESSMENT:**  
+If executed with perfect timing, the enemy could be encircled and forced to capitulate quickly; however, any lapse in coordination could lead to a protracted battle or failure.
+
+**Insights on Usage:**  
+- Provide detailed context (force sizes, terrain, timing) for a tailored analysis.  
+- Use the analysis for “what-if” scenarios to adjust and refine strategies.  
+- Note that real-world factors (morale, weather) should also be considered.
+
+--- 
+## **Analyze Mistakes**
+
+**Summary:**  
+Analyze_mistakes centers on learning from errors by evaluating a description of an event, project, or process that did not go as planned. It identifies what went wrong, the impact of those mistakes, and provides recommendations on how to avoid similar errors in the future.
+
+**Best Use Cases:**  
+- Post-mortem reviews in projects or startups to uncover key mistakes and their impacts.  
+- Personal reflection after failures to pinpoint areas for improvement.  
+- Sports or game analysis to identify strategic missteps.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ fabric --pattern analyze_mistakes -v="#description: Project X fell behind schedule..."
+~~~
+
+**Example Response:**  
+**IDENTIFIED MISTAKES:**  
+- **Unrealistic Timeline:** Allocating only 2 weeks for integration testing led to untested bugs at launch.  
+- **Lack of Clear Ownership:** Absence of a dedicated owner for the “User Onboarding” feature caused confusion and duplicate work.  
+- **Ignoring Early Red Flags:** Early team warnings were dismissed, missing an opportunity for timely course correction.
+
+**IMPACT OF MISTAKES:**  
+- Customers experienced bugs (e.g., payment processing errors) at launch, undermining trust.  
+- Poor onboarding resulted in user frustration and high dropout rates.  
+- The team experienced burnout and turnover due to a prolonged crunch period.
+
+**LESSONS & RECOMMENDATIONS:**  
+- **Improve Planning:** Allocate realistic timelines with built-in buffer periods, especially for testing phases.  
+- **Assign Clear Ownership:** Designate a responsible owner for each major feature.  
+- **Heed Early Warnings:** Address team concerns promptly with mid-project reviews and adjustments.  
+- **Support the Team:** Prevent burnout by enforcing reasonable work hours and potentially hiring additional support.
+
+**Insights on Usage:**  
+- Provide a detailed and honest account for precise feedback.  
+- Use the output as a checklist for future projects.  
+- More detailed inputs yield more specific and actionable recommendations.
+
+--- 
+## **Analyze Paper**
+
+**Summary:**  
+This pattern acts as a scholarly article assistant that dissects academic papers. It extracts primary findings, summarizes the study’s methodology, lists the authors and their affiliations, and evaluates the paper’s scientific rigor and novelty.
+
+**Best Use Cases:**  
+- Literature reviews to quickly grasp the essence of multiple papers.  
+- Quality appraisal to assess the credibility and robustness of a study.  
+- Drafting abstracts or reports based on detailed paper analyses.  
+- Assisting newcomers in translating complex research into accessible summaries.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ cat research_paper.txt | fabric --pattern analyze_paper --model gpt-4
+~~~
+
+**Example Response:**  
+**SUMMARY:**  
+A 25-word summary: "The study introduces a new lightweight solar panel design that increases energy capture by ~20% using a novel layered material approach."
+
+**AUTHORS:**  
+- Dr. Jane Smith; Dr. Alan Johnson; Dr. Priya Patel
+
+**AUTHOR ORGANIZATIONS:**  
+- MIT Media Lab, Massachusetts, USA  
+- Department of Materials Science, Stanford University, USA
+
+**FINDINGS:**  
+- Developed a layered photovoltaic material that captures both visible and infrared light, increasing conversion efficiency by 20%.  
+- Field tests show improved energy generation at dawn/dusk due to infrared capture.  
+- Prototype panels demonstrated minimal degradation over 1000 hours.
+
+**STUDY DETAILS:**  
+- **Methodology:** Experimental; tested 5 prototypes in lab and outdoor settings.  
+- **Comparison:** Benchmarked against leading solar panels under identical conditions.  
+- **Data:** Detailed measurements (voltage, current, spectrum analysis) across various wavelengths.
+
+**STUDY QUALITY:**  
+- **Design:** Robust controlled study.  
+- **Sample Size:** Moderate, sufficient for a prototype demonstration.  
+- **Statistical Rigor:** High; results include confidence intervals and p-values (<0.01).  
+- **Reproducibility:** Strong; schematics and simulation code provided.
+
+**RESEARCHER’S INTERPRETATION:**  
+The multi-layer approach is promising, though long-term durability needs further validation.
+
+**PAPER QUALITY (Ratings):**  
+- Novelty: 9/10  
+- Rigor: 8/10  
+- Empiricism: 9/10
+
+**Insights on Usage:**  
+- Provide the full text for best results; if not possible, include key sections.  
+- Verify critical details independently.  
+- Use the structured output to focus on essential aspects of the study.
+
+--- 
+## **Analyze Patent**
+
+**Summary:**  
+Analyze_patent functions as a virtual patent examiner. It evaluates a patent application by identifying the invention’s field, the problem addressed, the proposed solution, and its advantages. It also assesses novelty and inventive step, then provides a detailed summary along with up to 20 keywords capturing the core idea.
+
+**Best Use Cases:**  
+- For inventors to receive objective feedback on their patent drafts or to analyze competitor patents.  
+- Prior art review by summarizing multiple patents for comparison.  
+- Educational use in patent law courses.  
+- Translating dense patent language into a more accessible summary.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ fabric --pattern analyze_patent -i patent_application.txt
+~~~
+
+**Example Response:**  
+**FIELD OF THE INVENTION:**  
+Solar energy technology, specifically improvements in photovoltaic panel design for enhanced energy efficiency.
+
+**PROBLEM ADDRESSED:**  
+Inefficiencies in current solar panels due to wasted infrared heat.
+
+**SOLUTION (INVENTION):**  
+A dual-layer solar panel system that integrates a conventional photovoltaic cell with a thermoelectric layer to convert waste heat into electricity.
+
+**ADVANTAGES:**  
+- Increases energy output by approximately 20%.  
+- Maintains a similar panel footprint.  
+- Enhances thermal management and prolongs cell lifespan.
+
+**NOVELTY & INVENTIVE STEP:**  
+Combines two energy conversion mechanisms in a compact design using a new transparent thermoelectric polymer, which is not found in prior art.
+
+**PATENT SUMMARY:**  
+A two-layer solar panel that generates electricity from both sunlight and heat, significantly boosting efficiency.
+
+**KEYWORDS:**  
+solar panel; dual-layer; photovoltaic; thermoelectric; waste heat; improved efficiency; integrated energy harvesting; hybrid solar system; thermal conversion; spectrum utilization
+
+**Insights on Usage:**  
+- Ensure the input includes claims and structured sections for detailed analysis.  
+- Use the generated keywords for further research.  
+- Treat the novelty assessment as a preliminary evaluation; conduct formal prior art searches as needed.
+
+--- 
+## **Analyze Personality**
+
+**Summary:**  
+Analyze_personality examines a body of text (e.g., emails, speeches, or written content) to infer the personality and communication style of the author. It considers word choice, tone, formality, and emotional cues to produce a profile of key personality traits.
+
+**Best Use Cases:**  
+- Reviewing professional communication to understand how your tone is perceived.  
+- Character analysis for creative writing.  
+- Analyzing social media posts or public figures’ writings.  
+- Personal self-improvement by identifying tendencies such as aggressiveness or passivity.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ cat sample_emails.txt | fabric --pattern analyze_personality
+~~~
+
+**Example Response:**  
+**COMMUNICATION STYLE:**  
+The writer uses a polite, formal tone with well-structured sentences and proper grammar, indicating conscientiousness.
+
+**EMOTIONAL TONE:**  
+Calm and positive, with frequent expressions of gratitude, suggesting emotional stability and warmth.
+
+**SOCIAL ORIENTATION:**  
+Focuses on tasks and ideas with limited personal storytelling, hinting at an introverted, analytical nature while still showing empathy.
+
+**THINKING STYLE:**  
+Detail-oriented and organized, often employing bullet points and structured lists, reflecting a logical and methodical approach.
+
+**KEY PERSONALITY TRAITS (inferred):**  
+- Conscientiousness: High  
+- Agreeableness: High  
+- Emotional Stability: High  
+- Extroversion: Moderate to Low  
+- Openness: Moderate
+
+**Insights on Usage:**  
+- Use a large, varied text sample for a more reliable profile.  
+- Consider context when interpreting the results (formal work emails vs. casual messages).  
+- Treat the analysis as indicative rather than a definitive psychological assessment.
+
+--- 
+## **Analyze Presentation**
+
+**Summary:**  
+Analyze_presentation provides feedback on the content of a presentation or speech. It critiques structure, clarity, engagement, and overall effectiveness, acting as a public speaking coach to help refine your script or slide text.
+
+**Best Use Cases:**  
+- Preparing a speech or pitch by identifying issues in transitions, clarity, and tone.  
+- Post-presentation analysis to gather feedback for improvement.  
+- Training sessions for public speaking.  
+- Reviewing slide content to ensure it supports the narrative effectively.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ fabric --pattern analyze_presentation < keynote_draft.txt
+~~~
+
+**Example Response:**  
+**STRUCTURE & FLOW:**  
+The presentation has a clear introduction and conclusion; however, transitions between sections are abrupt. Consider adding bridging sentences between segments.
+
+**CLARITY OF MESSAGE:**  
+The core message is present but could be stated more explicitly at the outset. Simplify jargon to ensure all audience members understand.
+
+**ENGAGEMENT & TONE:**  
+A personal anecdote at the start is engaging, but the tone becomes overly formal in the middle. Maintain a consistent, conversational tone throughout.
+
+**STRENGTHS:**  
+- **Credibility:** Citing relevant studies enhances authority.  
+- **Conclusion:** The wrap-up ties back to the opening anecdote effectively.  
+- **Visual Potential:** Vivid language can be paired with strong visuals.
+
+**AREAS FOR IMPROVEMENT:**  
+- Improve pacing by inserting pauses or rhetorical questions after dense information.  
+- Increase audience interaction with direct questions or prompts.  
+- Emphasize key takeaways more clearly.
+
+**Insights on Usage:**  
+- Include stage directions or notes for context (e.g., “[pause for effect]”).  
+- Provide a full draft (introduction through conclusion) for comprehensive feedback.  
+- Use the feedback to iteratively refine your presentation.
+
+--- 
+## **Analyze Product Feedback**
+
+**Summary:**  
+Analyze_product_feedback processes a collection of product feedback (customer reviews, survey responses, etc.) to generate a qualitative analysis of user sentiments. It summarizes common positive sentiments, negative complaints, and frequently requested improvements, offering an overall view of customer satisfaction.
+
+**Best Use Cases:**  
+- Triage large volumes of survey responses to identify major themes.  
+- Review post-release feedback to assess the impact of new features.  
+- Conduct periodic product health checks to monitor emerging issues.  
+- Perform comparative analysis between competing products.
+
+**Example Use [prompt]:**
+
+~~~bash
+$ cat user_feedback.csv | fabric --pattern analyze_product_feedback
+~~~
+
+**Example Response:**  
+**POSITIVE FEEDBACK THEMES:**  
+- **User-Friendly Interface:** Users praise the app’s intuitive design.  
+- **Feature X Success:** The new offline mode is highly appreciated, especially during poor network conditions.  
+- **Customer Support:** Quick and helpful responses from support are frequently mentioned.
+
+**NEGATIVE FEEDBACK THEMES:**  
+- **Performance Issues:** Many users report lag and crashes, particularly on older devices.  
+- **Battery Drain:** Significant battery consumption is a common complaint.  
+- **Feature Y Removal:** Long-time users express dissatisfaction over the removal of a previously popular feature.
+
+**TOP REQUESTED IMPROVEMENTS:**  
+- Introduction of Dark Mode to reduce eye strain.  
+- More customization options for personalizing the interface.  
+- Additional integrations with external services (e.g., Google Fit, Slack).
+
+**OVERALL SENTIMENT:**  
+The feedback is mixed, leaning towards positive overall, though technical issues remain a significant concern.
+
+**Insights on Usage:**  
+- Pre-process feedback to deduplicate repetitive entries for nuanced analysis.  
+- Use the detailed breakdown to guide product improvement priorities.  
+- For very large datasets, consider chunking feedback and then aggregating summaries.
