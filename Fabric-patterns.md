@@ -1,159 +1,145 @@
-Note: The Fabric repository contains dozens of Patterns. Below is a selection of patterns with their name, function summary, an example usage (piping a prompt into fabric), and a simulated example response. The script would iterate over all pattern files to produce similar output for each.
 
-Pattern Name: analyze_logs
-Summary: Analyzes a server log file to identify unusual patterns or anomalies and provide insights into the server’s reliability and performance ￼ ￼.
-Example Use [prompt]: echo "ERROR 2025-02-25 10:23:45 ModuleX failed to respond\nINFO 2025-02-25 10:24:01 Service restarted" | fabric -p analyze_logs
+## agility_story
+
+**Summary**: Generates an Agile user story (often with acceptance criteria) from a given topic or requirement ￼. This pattern helps turn a brief feature description into a structured user story for Agile development (e.g., “As a [role], I want [feature] so that [benefit]”).
+**[prompt]**: echo "Build a user login feature for the website" | fabric --pattern agility_story
+**Response**:
+{
+  "User Story": "As a website user, I want to log into the site so that I can access personalized features.",
+  "Acceptance Criteria": [
+    "Users can enter a username and password to log in",
+    "Successful login grants access to user-specific content",
+    "Invalid login attempts show an error message without revealing which part is incorrect"
+  ]
+}
+
+
+## ai
+
+Summary: Produces a short explanation of a given AI concept or technology ￼. In other words, it acts as a quick AI encyclopedia: you provide the name of an AI-related topic, and it returns a concise, plain-language description.
+Example Use [prompt]: echo "Neural networks" | fabric --pattern ai
 Example Response:
+**Neural Networks:** Neural networks are a type of machine learning model inspired by the human brain. They consist of layers of interconnected "neurons" that process data. These networks learn patterns from large amounts of examples. For instance, a neural network can learn to recognize images of cats by adjusting the connections (weights) between neurons during a training process. Over time, it becomes very good at mapping inputs (like an image) to the correct output (identifying the image as a cat) without being explicitly programmed with rules.
 
-	Analysis: The log shows a module failure followed by a service restart.
-Insights: The error at 10:23:45 indicates ModuleX crashed. The immediate restart at 10:24:01 restored service functionality. No other anomalies were detected in the provided snippet.
-Recommendation: Investigate ModuleX for root cause of the crash and ensure proper error handling to prevent future service interruptions.
 
-Pattern Name: analyze_paper
-Summary: Reviews an academic research paper to extract its primary findings and assess its scientific rigor and quality ￼.
-Example Use [prompt]: (Imagine the clipboard contains the text of a research paper)pbpaste | fabric -p analyze_paper
+## analyze_answers
+
+Summary: Examines a set of answers (e.g. responses to a question) to evaluate their accuracy, relevance, and any potential biases ￼. This pattern is useful for checking multiple answers – for instance, answers from different people or AI – and judging which are correct or if they contain errors or bias.
+Example Use [prompt]: echo $'Q: What is the capital of France?\nAnswer 1: London\nAnswer 2: Paris\nAnswer 3: Paris, but I think it\'s in Italy.' | fabric --pattern analyze_answers
 Example Response:
+**Analysis of Answers:**
+- **Answer 1 (London):** Incorrect. London is the capital of the UK, not France. *Accuracy:* Low (the answer is wrong). *Relevance:* The answer addresses the question but is factually wrong. *Bias:* No obvious bias, just a factual error.
+- **Answer 2 (Paris):** Correct. Paris is the capital of France. *Accuracy:* High. *Relevance:* Directly answers the question. *Bias:* None – this is a straightforward factual answer.
+- **Answer 3 (“Paris, but I think it’s in Italy”):** Partially correct. It correctly identifies Paris as the capital of France, but then shows confusion about the country. *Accuracy:* Medium (mixed correctness). *Relevance:* Mentions the right city but adds irrelevant/incorrect info. *Bias:* Indicates a possible knowledge gap (mistaking France vs. Italy) rather than bias.
 
-	Summary: The study finds that introducing XYZ compound significantly improved plant growth under drought conditions.
-Rigor Assessment: The experiment appears well-designed with appropriate controls, though the sample size was relatively small.
-Findings:
-		•	XYZ compound-treated plants had a 25% higher biomass than untreated ones.
-	•	Results suggest enhanced drought tolerance due to improved root water retention.
-Quality: The paper is of high quality, but further trials with larger sample sizes are recommended to strengthen the evidence.
 
-Pattern Name: analyze_debate
-Summary: Objectively examines a debate transcript to summarize each side’s arguments and help the reader understand the overall discussion ￼.
-Example Use [prompt]: echo "Alice: We need stricter regulations.\nBob: I disagree; regulations hurt innovation." | fabric -p analyze_debate
+## analyze_candidates
+
+Summary: Evaluates information about multiple candidates (such as job applicants) to compare their qualifications and fit for a role. This pattern analyzes each candidate’s strengths and weaknesses based on the provided input ￼. In a hiring scenario, for example, it would help highlight which candidate better meets the requirements or where each excels.
+Example Use [prompt]: echo "Candidate A: 5 years experience in software development (Java, Python). Candidate B: 3 years experience (Python), background in data science." | fabric --pattern analyze_candidates
 Example Response:
+**Candidate A:** Has 5 years of software development experience, which suggests a strong foundation in building applications. Proficient in Java and Python – this breadth in languages indicates versatility. Likely capable of leading development tasks and mentoring, given the longer experience. *Strengths:* Extensive experience, expertise in full-stack development. *Weaknesses:* Less data science experience.
+**Candidate B:** Has 3 years of experience, focused on Python and data science. This candidate may bring valuable machine learning and data analysis skills. *Strengths:* Modern data science background, likely strong in analytics and ML. *Weaknesses:* Overall development experience is shorter, which might mean less exposure to large-scale software projects.
+**Comparison:** For a pure software development role, Candidate A’s longer experience might be advantageous for immediate productivity. For a role that involves data-driven features or machine learning, Candidate B offers relevant expertise. **Fit Recommendation:** If the position is a general software engineer for building application features, Candidate A is a stronger fit. If the role requires implementing data science or analytics, Candidate B’s skillset could be more valuable.
 
-	Debate Summary: Alice advocates for stricter regulations, arguing they are necessary for public safety and trust. Bob opposes, claiming that too many regulations can stifle innovation and economic growth.
-Key Points (Alice): Emphasizes safety, consumer protection, and long-term benefits of regulation.
-Key Points (Bob): Emphasizes innovation, flexibility for companies, and short-term economic gains.
-Outcome: The debate highlights a classic safety vs. innovation conflict, without a clear winner but providing insight into both perspectives.
 
-Pattern Name: analyze_threat_report
-Summary: Extracts the “juicy” and most valuable parts of a cybersecurity threat report (e.g. from DBIR or CrowdStrike), including key findings, notable quotes, references, and recommendations ￼.
-Example Use [prompt]: (report.txt contains a threat report)cat report.txt | fabric -p analyze_threat_report
+## analyze_cfp_submission
+
+Summary: Reviews a “Call for Proposals” submission (such as a conference talk proposal or research abstract). The pattern analyzes the submission’s content for clarity, relevance to the CFP topic, strengths, and weaknesses, offering feedback on how well it meets the criteria and how it could be improved. (CFP = Call for Proposals, often for conference talks or papers.)
+Example Use [prompt]: echo $'Title: AI in Healthcare\nAbstract: This talk will explore how artificial intelligence can improve patient outcomes, including examples of machine learning in medical diagnosis and personalized treatment.' | fabric --pattern analyze_cfp_submission
 Example Response:
+**Proposal Title:** “AI in Healthcare”
+**Summary of Proposal:** The submission intends to discuss applications of artificial intelligence to improve patient outcomes. It mentions using machine learning for medical diagnosis and personalized treatment, indicating real-world examples will be provided.
+**Strengths:** The topic is timely and highly relevant to the healthcare industry. The proposal promises practical examples (“machine learning in medical diagnosis and personalized treatment”), which adds credibility. The focus on patient outcomes gives a clear value proposition for the audience.
+**Weaknesses/Areas for Improvement:** The abstract is somewhat broad. It could be more specific about which aspects of AI (e.g., specific algorithms or case studies) will be covered. Also, it doesn’t mention any results or conclusions – adding expected takeaways or findings could strengthen the proposal. Ensuring the talk has a clear narrative (problem -> AI solution -> outcome) would help.
+**Relevance to CFP:** High. It squarely addresses AI in a real-world domain (healthcare) and should attract interest due to the subject’s importance.
+**Overall Feedback:** A strong proposal idea. To improve it further, the author should add more detail on the content structure and emphasize any unique insights or results the talk will provide. This will make it more compelling to the reviewers and audience.
 
-	HIGHLIGHTS:
-		•	2024 saw a 20% increase in network intrusion incidents compared to 2023.
-	•	583% surge in password spray attacks targeting cloud services.
-QUOTES:
-	•	“Identity-based attacks take center stage.”
-	•	“We are entering an era of a cyber arms race where AI will amplify the impact.”
-REFERENCES:
-	•	Acme Cybersecurity Annual Report 2024
-	•	CloudGuard Threat Intelligence Brief Q1
-RECOMMENDATIONS:
-	•	Implement phishing-resistant MFA across the organization.
-	•	Conduct regular cloud security audits and employee security training.
 
-Pattern Name: explain_terms
-Summary: Produces a glossary of important terms from the input content, giving a two-sentence explanation for each term ￼.
-Example Use [prompt]: echo "Quantum Computing is mentioned alongside qubits and superposition." | fabric -p explain_terms
+## analyze_claims
+
+Summary: Dissects the truth claims in a piece of text and provides a balanced analysis ￼. This pattern will summarize the overall argument, then for each claim it finds: list the claim, give evidence supporting it, evidence refuting it, point out any logical fallacies, and even assign a truthfulness rating. It’s meant to critically analyze assertions in the input content for veracity and bias.
+Example Use [prompt]: echo "According to some sources, the global climate is not warming; in fact, certain scientists have proven that the Earth is cooling." | fabric --pattern analyze_claims
 Example Response:
+**ARGUMENT SUMMARY:** The input claims that global climate change is not happening and instead argues the Earth is cooling, citing “certain scientists” as evidence.
+**TRUTH CLAIMS:**
+- **CLAIM:** *“The global climate is not warming; the Earth is actually cooling.”*  
+- **CLAIM SUPPORT EVIDENCE:** Proponents of this claim sometimes point to short-term cooling periods (e.g. a few years in the mid-20th century) or cherry-picked regional data as evidence. For instance, they might note that between 1940 and 1970, average temperatures in the Northern Hemisphere slightly dropped.  
+- **CLAIM REFUTATION EVIDENCE:** Extensive, long-term global data show a clear warming trend. NASA and NOAA data indicate that the last decade was the warmest on record globally, and the overall global average temperature has increased by about 1°C since the late 19th century. This broad scientific consensus directly contradicts the claim of overall cooling.  
+- **LOGICAL FALLACIES:** The claim employs **cherry-picking** (focusing on an unusual short-term cooling period while ignoring the long-term warming trend). It also uses an **appeal to vague authority** (“certain scientists”) without credible citations.  
+- **CLAIM RATING:** **F (Definitely False).** The overwhelming majority of evidence shows the climate is warming, not cooling.
+**ADDITIONAL NOTES:** The argument is misleading, as it takes a complex topic like climate trends and presents a false conclusion by omitting context. A balanced view of climate data strongly supports warming.
 
-	Glossary:
-Quantum Computing: A computing paradigm using quantum-mechanical phenomena such as superposition and entanglement to perform operations. It exploits qubits (quantum bits) which, unlike binary bits, can represent 0 and 1 simultaneously, enabling exponential processing power for certain tasks.
-Qubit: The fundamental unit of quantum information. Unlike a classical bit, which can be either 0 or 1, a qubit can exist in a superposition of states. This property allows quantum computers to process a vast number of possibilities at once, vastly increasing computational potential for specific algorithms.
-Superposition: A principle of quantum theory where a quantum system can exist in multiple states at the same time until measured. In computing, superposition allows qubits to perform many calculations simultaneously, forming the basis of quantum computing’s potential power.
 
-Pattern Name: explain_code
-Summary: Takes source code (and documentation) as input and provides a clear, step-by-step explanation of what the code does ￼.
-Example Use [prompt]: echo "def add(a, b):\n    return a + b" | fabric -p explain_code
+## analyze_comments
+
+Summary: Analyzes a collection of user comments to extract insights about sentiment, common themes, and potential issues. This pattern digests comments (for example, feedback on a product or post) and outputs an overview such as overall sentiment (positive/negative/mixed), recurring points of praise or criticism, and any notable biases or concerns expressed by commenters.
+Example Use [prompt]: echo $'Comment 1: I love the new interface, it\\'s very user-friendly and intuitive.\nComment 2: The app keeps crashing and customer support is unhelpful.' | fabric --pattern analyze_comments
 Example Response:
+**Overall Sentiment:** Mixed – one commenter is very positive about the product interface, while another is clearly frustrated with the app’s stability and support.
+**Key Themes Identified:**  
+- *Positive Feedback:* The **user interface design** is praised for being user-friendly and intuitive. This suggests the recent changes to the UI are successful and well-received by at least some users.  
+- *Negative Feedback:* **App stability/reliability** is a problem (reports of frequent crashes). Additionally, **customer support** is criticized as unhelpful. These are areas of concern that might need immediate attention.
+**Comment-Specific Notes:**  
+- Comment 1 is enthusiastic about usability, indicating that ease of use is a strong selling point of the app.  
+- Comment 2 points out a serious issue (crashing) and dissatisfaction with support, indicating a gap in user experience post-release.
+**Potential Biases:** Neither comment shows obvious bias; they appear to be genuine user experiences (one positive, one negative). The second comment is strongly negative, but it’s focused on specific issues rather than derogatory language.
+**Suggestions:** Focus on stability improvements and customer support training. The positive feedback on interface can be used in marketing, but the crashing issue must be addressed to prevent losing user trust.
 
-	Code Explanation: This Python function is named add and accepts two parameters, a and b. It returns the sum of a and b. In other words, if you call add(5, 3), it will compute 5 + 3 and give the result 8. This function provides a simple addition operation for two numbers.
+## analyze_debate
 
-Pattern Name: extract_wisdom
-Summary: Extracts the most interesting and insightful pieces of information from a text (e.g. a podcast or video transcript), organizing them into sections like Summary, Ideas, Insights, Quotes, Habits, Facts, References, and a one-sentence takeaway ￼ ￼.
-Example Use [prompt]: (transcript.txt contains a podcast transcript)cat transcript.txt | fabric -p extract_wisdom
-Example Response: (simulated excerpt)
-
-	SUMMARY: (25-word summary of the content) e.g. Author John Doe discusses lifelong learning and how curiosity and habit formation can lead to continuous personal growth.
-IDEAS:
-		•	Embrace a “beginner’s mind” to learn something new every day.
-	•	Schedule regular time for reading and reflection.
-(…and so on, listing ~20 insightful ideas from the content.)
-INSIGHTS:
-	•	Lifelong learning is more about consistent habits than innate talent.
-	•	Curiosity can be cultivated and strengthened over time.
-(…additional distilled insights…)
-QUOTES:
-	•	“The moment you stop learning, you start dying.” – Albert Einstein (cited in the discussion)
-	•	“Stay curious. It’s the key to endless growth.” – Jane Smith
-(…more quotes…)
-ONE-SENTENCE TAKEAWAY: Lifelong growth comes from staying curious and forming habits that nurture continuous learning.
-
-Pattern Name: summarize
-Summary: Produces a concise summary of the given content, outputting the summary in a clear Markdown format ￼.
-Example Use [prompt]: echo "The novel tells the story of a young adventurer who travels across the world..." | fabric -p summarize
+Summary: Provides an in-depth analysis of a debate transcript ￼. This pattern evaluates how insightful and emotionally charged the debate is, identifies participants and analyzes their arguments, and outlines points of agreement or disagreement. The output includes an insightfulness score and emotionality score for the debate, a breakdown of each participant’s stance, evidence backing or refuting key arguments, and highlights of any agreements, unresolved disagreements, misunderstandings, as well as lessons or takeaways from the debate ￼. It essentially helps the user understand the debate’s content and quality at a glance.
+Example Use [prompt]: echo $'Debater A: We should invest in renewable energy to combat climate change.\nDebater B: Renewable energy is too expensive and not reliable enough.' | fabric --pattern analyze_debate
 Example Response:
+**INSIGHTFULNESS SCORE (0-10):** 5  
+*The debate offers some substantive points but remains surface-level. There is an exchange of viewpoints, but neither side provides in-depth evidence.*  
+**EMOTIONALITY SCORE (0-5):** 1  
+*Both participants keep a mostly calm tone with no obvious anger or excessive emotion.*  
+**PARTICIPANTS:**  
+- **Debater A (Emotionality: 1):** Advocates for investing in renewable energy as a necessity to combat climate change. A’s approach is calm and focused on long-term benefits and environmental responsibility.  
+- **Debater B (Emotionality: 1):** Argues against renewables by citing cost and reliability concerns. B remains composed while emphasizing economic practicality and current technological limits.
+**ARGUMENTS:**  
+- **Debater A’s Arguments:** Renewable energy is essential to fight climate change. A implies that not investing now would be irresponsible for future generations. *Evidence/Support:* References the urgency of climate reports and falling costs of renewables (though not explicitly cited in the snippet).  
+- **Debater B’s Arguments:** Renewable technologies are too costly and intermittent to replace traditional energy fully. *Evidence/Support:* Points to high initial investments and instances where solar/wind production is low (again not detailed in the snippet). *Counterpoint:* B does not address A’s climate urgency argument, focusing only on economic factors.
+**AGREEMENTS:**  
+None explicitly stated. Both participants seem to agree that energy decisions involve trade-offs, but they do not openly acknowledge any common ground in this excerpt.
+**DISAGREEMENTS:**  
+They fundamentally disagree on priority: A prioritizes environmental impact and long-term gains of renewables, while B prioritizes short-term cost and reliability issues. There is a clear clash between *environmental necessity* vs. *economic feasibility*.
+**POSSIBLE MISUNDERSTANDINGS:**  
+Debater A might assume all cost concerns are short-sighted without addressing them, while Debater B might be operating under outdated information about renewable costs or ignoring long-term cost savings. Each may slightly misunderstand the weight the other gives to their concerns.
+**LEARNINGS:**  
+The debate highlights the classic tension in energy policy between sustainability and cost. It shows that factual data (cost trends, reliability improvements) would benefit the discussion. It also suggests that values (future sustainability vs. present economics) drive each side’s stance.
+**TAKEAWAYS:**  
+For a more productive debate, both sides could incorporate each other’s points: A could address cost/reliability with data on improvements in renewable tech, and B could acknowledge the environmental stakes. This would move the discussion toward a more informed middle ground.
 
-	Summary: A young adventurer embarks on a global journey, encountering diverse cultures and challenges, and ultimately discovers the true meaning of friendship and courage. (The content is condensed to highlight the main character’s journey and its outcome.)
 
-Pattern Name: summarize_paper
-Summary: Summarizes a scientific or academic paper, highlighting the core findings, methodology, and conclusions in a brief review format ￼.
-Example Use [prompt]: (paper.txt contains an academic paper’s text)cat paper.txt | fabric -p summarize_paper
+## analyze_email_headers
+
+Summary: Inspects raw email header data to trace an email’s origin and identify any anomalies or signs of spoofing. This pattern parses through header lines (such as “Received” chains, SPF/DKIM authentication results, sender/recipient info) and provides an analysis of whether the email is legitimate or suspicious. It can help uncover misconfigurations or malicious indicators in an email’s metadata.
+Example Use [prompt]: echo $'Received: from mail.example.com (192.168.1.100) by mx.google.com;\nSPF: PASS;\nDKIM: PASS;\nFrom: \"Trusted Sender\" <noreply@example.com>;\nReply-To: attacker@malicious.com' | fabric --pattern analyze_email_headers
 Example Response:
+**Email Header Analysis:**
+- **Originating Server:** The email was received from `mail.example.com` with IP `192.168.1.100`. This appears to be the legitimate mail server for **example.com** (internal IP used for example). The chain shows it passed through Google’s mail exchange (mx.google.com), indicating it was sent to a Gmail address.
+- **Authentication Results:** SPF check is **PASS**, meaning the sending server was authorized to send on behalf of example.com. DKIM is **PASS**, so the message content was likely not tampered with in transit and the signature matches the example.com domain. These results suggest the email *technically* passed authentication for the example.com domain.
+- **Sender vs Reply-To:** The `From` address is `noreply@example.com` (which matches the domain that passed SPF/DKIM). However, the `Reply-To` is set to `attacker@malicious.com`, which is a **red flag**. This mismatch implies that while the email came from a legitimate server, it is trying to funnel replies to a different domain. This is a common tactic in phishing emails – the message is sent from a real domain (to pass SPF/DKIM checks) but any responses would go to the attacker’s address.
+- **Analysis Summary:** The headers indicate the email *originated from the legitimate example.com server and passed authentication*, but the presence of a Reply-To pointing to another domain is suspicious. This likely means the sender’s account or server was compromised to send phishing emails. **Verdict:** The email is potentially malicious (phishing attempt) despite passing SPF/DKIM, due to the deceptive Reply-To address.
+- **Recommendation:** Do not trust emails with such header discrepancies. Investigate the example.com sender account for compromise. The recipient should be cautious and not click links or reply to the malicious address.
 
-	Title: Effective Water Conservation in Urban Agriculture
-Authors: Jane Smith, John Doe (Univ. of Example)
-Summary: This paper examines techniques for water conservation in urban farming. Using a year-long controlled study, the authors found that drip irrigation coupled with mulching reduced water usage by ~30% while maintaining crop yield.
-Methodology: A comparison of plots using traditional irrigation vs. drip irrigation with mulch cover, measuring water consumption and plant growth metrics.
-Key Findings: Drip irrigation significantly increases water efficiency. Soil moisture retention improved, and there was no significant drop in crop productivity.
-Conclusion: Implementing drip irrigation and mulching in urban gardens is a recommended practice for sustainable water use without harming output.
 
-Pattern Name: create_art_prompt
-Summary: Generates a creative AI art prompt based on a given piece of writing or concept. It captures the mood, setting, and key details of the input to craft a prompt suitable for text-to-image models (e.g. Midjourney or DALL·E).
-Example Use [prompt]: echo "A mystical forest at dawn with ancient trees and glowing fog" | fabric -p create_art_prompt
+## analyze_incident
+
+Summary: Analyzes an incident report (for example, a cybersecurity breach or IT outage report) to extract key details and provide an assessment. This pattern will summarize what happened, identify the root cause of the incident, describe the impact, evaluate the response, and often suggest preventive measures for the future. It’s meant to turn a raw incident description into a clear post-mortem style analysis.
+Example Use [prompt]: echo "Incident: On Jan 1, attackers exploited an XSS vulnerability on our site, stealing user data. The team identified the issue and patched it within 24 hours." | fabric --pattern analyze_incident
 Example Response:
+**Incident Summary:** On January 1st, an attacker exploited a cross-site scripting (XSS) vulnerability on the website, which allowed them to steal user data. The security team discovered the breach and applied a patch to fix the vulnerability within 24 hours.
+**Impact:** User data was compromised during the attack. The stolen data could include sensitive user information (e.g. usernames, maybe emails or session tokens, depending on what the XSS exposed). This incident likely affected all users who loaded the infected page while the attack was active. Customer trust and safety are at risk, and there may be legal/compliance implications if personal data was taken.
+**Root Cause:** The root cause was an unpatched XSS flaw in the web application. This indicates insufficient input sanitization on user-provided data (allowing malicious scripts to run). It also suggests that prior security testing did not catch this vulnerability.
+**Response Evaluation:** The team reacted quickly – the issue was identified and patched within a day, which is a positive outcome. Containing the breach in 24 hours limited the window of exposure. The team likely also alerted users and invalidated sessions or took other steps to secure accounts, though that’s not stated here.
+**Recommendations:**  
+- **Improve Input Validation:** Ensure all user inputs are properly sanitized or encoded to prevent XSS. Conduct a thorough security code review and apply stricter validation frameworks.  
+- **Security Testing:** Implement regular security testing (penetration testing or automated scans) to catch vulnerabilities like XSS before deployment.  
+- **Monitoring and Incident Response:** Enhance monitoring to detect such attacks in real-time. The quick response was good, but earlier detection (e.g., via anomaly detection or error logs) could further minimize damage.  
+- **User Notification:** If not done already, inform affected users about the breach and advise them on any necessary actions (like changing passwords if credentials might be impacted). Also consider providing guidance on how you will prevent such issues going forward to rebuild trust.
+**Conclusion:** This incident underscores the importance of web application security best practices. While the response was swift and the flaw is now patched, the company should take proactive steps to prevent similar vulnerabilities and prepare for future incidents.
 
-	AI Art Prompt: “Digital painting of a mystical ancient forest at dawn, towering trees shrouded in glowing mist, soft golden light filtering through dense foliage, ethereal and serene atmosphere, high detail, 8K resolution”
-(This prompt translates the user’s description into a format ready for an AI art generator, including style and quality descriptors.)
 
-Pattern Name: create_threat_scenarios
-Summary: Creates simple, narrative-based threat scenarios across various domains (from physical security to cybersecurity) given a particular context ￼. It helps envision potential threats for risk assessments.
-Example Use [prompt]: echo "Scenario: A small tech startup storing customer data in the cloud." | fabric -p create_threat_scenarios
-Example Response:
-
-	Threat Scenario 1: A social engineering attack targets the startup’s employees. An attacker posing as an IT support agent tricks an employee into revealing the cloud credentials, leading to a data breach of customer information.
-Threat Scenario 2: A ransomware attack infiltrates the startup’s network via a phishing email. It encrypts critical customer data stored in the cloud, demanding ransom and causing operational downtime.
-Threat Scenario 3: Insider threat – A disgruntled former developer who still knows system access points attempts to exploit a remaining backdoor to steal or corrupt customer data.
-(Each scenario is a narrative describing who the attacker is, what they do, and the impact on the startup.)
-
-Pattern Name: analyze_claims
-Summary: Scrapes a given webpage (using Jina AI for web content) and analyzes the claims made in the text, evaluating their content or truthfulness ￼. This is useful for fact-checking or understanding the assertions in an article.
-Example Use [prompt]: fabric -p analyze_claims -u "https://example.com/health-news.html"
-(The above command fetches the webpage content and analyzes its claims.)
-Example Response:
-
-	Claim 1: “Eating chocolate daily cures anxiety.” – Analysis: This claim is dubious. No scientific consensus supports chocolate as a cure for anxiety. While dark chocolate can have mood-improving compounds, it is not a medical cure ￼.
-Claim 2: “Regular exercise improves mental health.” – Analysis: This claim is credible. It is supported by research; regular exercise is linked with reduced stress and improved mood.
-Claim 3: “Vaccine X causes long-term memory loss.” – Analysis: False. There is no evidence that Vaccine X causes memory loss; clinical trials and studies have found no such side effect.
-
-Pattern Name: rate_content
-Summary: Rates the quality or value of a given content piece (such as an article or video) to help decide if it’s worth consuming ￼. The output often includes a score or qualitative assessment.
-Example Use [prompt]: echo "This video provides a detailed tutorial on Python programming..." | fabric -p rate_content
-Example Response:
-
-	Content Quality Rating: 8/10
-Assessment: This content is high quality. The tutorial is well-structured, starts with clear basics, and gradually progresses to advanced topics. The explanations are easy to follow, and practical examples are provided. A minor issue is the audio quality, which is occasionally inconsistent. Overall, it’s definitely worth watching for anyone interested in learning Python.
-
-Pattern Name: write_essay
-Summary: Turns a short idea or prompt into a full essay, written in a style that matches the user’s own voice and perspective ￼. This pattern helps expand an idea into a coherent narrative or argument.
-Example Use [prompt]: echo "The importance of biodiversity in urban areas" | fabric -p write_essay
-Example Response:
-
-	Essay (Introduction Excerpt): Biodiversity in urban areas is more than a pleasant backdrop of greenery—it is a crucial foundation for healthy city life. In my everyday walks through the city parks, I’ve noticed the vibrant interplay of birds, insects, and plants even in small green patches. These observations underscore a simple truth: even in concrete jungles, nature finds a way to flourish, and when it does, it profoundly benefits us humans. … (The essay would continue to discuss how diverse plant and animal life improves air quality, enhances mental health for residents, and creates more resilient urban ecosystems, all in a conversational tone that reflects the user’s voice.)
-
-Pattern Name: improve_writing
-Summary: Improves a given piece of writing by correcting grammar and enhancing clarity and style. The pattern rewrites text to be more polished and coherent while preserving the original meaning.
-Example Use [prompt]: echo "I has a issue with the code it not run good." | fabric -p improve_writing
-Example Response:
-
-	Rewritten Text: “I have an issue with the code: it’s not running properly.”
-Changes Made: Corrected grammatical errors (“I has a” → “I have”; “it not run good” → “it’s not running properly”) and clarified the sentence structure for better readability.
-
-The above output illustrates how the script would format the information for each pattern in markdown. Each Pattern Name is listed with a brief Summary, an Example Use showing how to pipe a prompt into fabric using that pattern, and an Example Response showing a plausible result.
