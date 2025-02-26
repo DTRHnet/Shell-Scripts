@@ -222,14 +222,14 @@ function Inst-Prog {
         if ($App -eq "fabric") {
             try {
                 Push-Location $targ
-                Write-Host "Running windows_install.bat for Fabric..." -ForegroundColor Cyan
-                cmd /c "windows_install.bat"
+                Write-Host "Running install_fabric.bat for Fabric..." -ForegroundColor Cyan
+                cmd /c "install_fabric.bat"
                 Pop-Location
-                Write-Host "windows_install.bat completed for Fabric." -ForegroundColor Green
+                Write-Host "install_fabric.bat completed for Fabric." -ForegroundColor Green
             }
             catch {
-                Log-Err "windows_install.bat failed for Fabric: $_"
-                Write-Error "windows_install.bat failed for Fabric: $_"
+                Log-Err "install_fabric.bat failed for Fabric: $_"
+                Write-Error "install_fabric.bat failed for Fabric: $_"
             }
         }
     }
