@@ -1,6 +1,8 @@
 # L2DK.sh - Live to Drive (Kali)
 
-![](L2DK.png)
+<div style="text-align: center;">
+  <img src="L2DK.png" alt="L2DK">
+</div>
 
 **L2DK.sh** is a powerful Bash script designed to convert a Kali Linux Live USB session into a full persistent installation on an internal drive. It allows you to move your live system to an internal disk, set up proper mounting, formatting, and UEFI boot with GRUB, all through an interactive terminal interface.
 
