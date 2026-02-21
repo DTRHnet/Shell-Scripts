@@ -1,5 +1,10 @@
 <p align="center">
-  <img src="L2DK.png" alt="L2DK Preview" width="600"/>
+  <img src="https://raw.githubusercontent.com/DTRHnet/Shell-Scripts/main/Live2Drive-Kali/L2DK.png" alt="L2DK Preview" width="600"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/license/DTRHnet/Shell-Scripts" alt="License"/>
+  <img src="https://img.shields.io/github/last-commit/DTRHnet/Shell-Scripts" alt="Last Commit"/>
 </p>
 
 # L2DK.sh - Live to Drive (Kali)
