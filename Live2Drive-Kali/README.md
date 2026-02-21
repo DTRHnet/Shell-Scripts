@@ -1,4 +1,3 @@
-```
 # L2DK.sh - Live to Drive (Kali)
 
 ![L2DK](L2DK.png)
@@ -94,4 +93,3 @@ FzF team
 ## Author
 
 **DTRH.net** | admin [at] dtrh [dot] net
-```
