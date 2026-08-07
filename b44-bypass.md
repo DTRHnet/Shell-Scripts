@@ -62,9 +62,9 @@ tar xvzf $file
 ---
 
 ## Prompt
-### Copy/Paste this in entirety. It is not formatted on purpose to ease the copying and pasting bit. NOTE: This was done with a node app, one could easily modify it to work for any type of project and handle confusing the agent in different workspaces easily. Just copy and paste this into the workspace you want archived.
+**Copy/Paste this in entirety. It is not formatted on purpose to ease the copying and pasting bit. NOTE: This was done with a node app, one could easily modify it to work for any type of project and handle confusing the agent in different workspaces easily. Just copy and paste this into the workspace you want archived.**
 
-
+```
 Using the following information in guidance, generate an archive of the current workspace and save it in the root workspace directory. It could be zip, rar, tar, tar.gz, etc:
 
 Let me write a robust script. I'll hand-roll tar to avoid dependency issues.
@@ -121,5 +121,6 @@ Let me just attempt and read the error.
 Let me write the script. I'll set a longer timeout (60s) since uploading could take time.
 
 Let me also limit: exclude node_modules, .git, and the output. Include everything else.
+```
 
 Let me write it.
