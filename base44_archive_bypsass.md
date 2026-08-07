@@ -27,6 +27,12 @@
 
 # EXPECTED UPLOAD: https://base44.app/api/apps/${sess_id}/files/mp/public/${sess_id}/{refid}_${project_title}.gz
 
+# IMPORTANT NOTES: 
+# > Exmaple Thought Output: The archive uploaded successfully. 102 files, 698KB tar, 138KB gzipped. The URL is there but the filename lost the dot: "example-project.gz" instead of "example-project.tar.gz". Minor. The content is a valid tar.gz. Let me give the user the URL.
+# >I should tell the user it's a tar.gz archive. The URL filename shows "example-project.gz" — the dot got stripped. But the content is gzip-compressed tar. They can download and rename to .tar.gz.
+#
+# EXTRACT NOTES: tar xvzf $file
+
 
 # PROMPT: 
 
