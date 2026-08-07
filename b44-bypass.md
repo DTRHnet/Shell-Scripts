@@ -8,7 +8,7 @@ Base44's monetization model is both **subscription** and **credit-based**.
 
 Integrations with services such as GitHub are only available on paid plans. On the free plan, users can build applications but are generally unable to export, save, or use them outside the Base44 platform.
 
-This limitation can sometimes be worked around by carefully instructing the agent to create an archive of the workspace manually.
+This limitation can repeatedly be worked around by carefully instructing the agent to create an archive of the workspace manually.
 
 ---
 
